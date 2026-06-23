@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creador de Currículum Profesional A4 - Listo para GitHub Pages</title>
+    <title>Creador de Currículum Profesional A4</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -20,26 +20,30 @@
             --cv-line-height: 1.35;
         }
 
-        /* Estilos de impresión y exportación estricta a A4 */
+        /* ESTILOS ESTRICTOS PARA ELIMINAR FECHAS, URLs Y BORDES EN EL PDF */
         @media print {
             @page {
-                size: A4 portrait;
-                margin: 0 !important; /* Elimina cabeceras, pies de página, URLs y fechas de la impresión */
+                size: 210mm 297mm; /* Fuerza el tamaño exacto A4 */
+                margin: 0mm !important; /* ELIMINA FECHAS, URL Y TÍTULOS DEL NAVEGADOR */
             }
-            body {
-                background: white !important;
-                color: black !important;
+            html, body {
+                width: 210mm !important;
+                height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                background: white !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .no-print {
-                display: none !important; /* Oculta el editor, header y footer */
+                display: none !important;
             }
-            /* Elimina absolutamente cualquier borde negro, sombra o marco gris en el documento PDF final */
+            /* Configuración exacta del lienzo para la impresión */
             #print-area {
                 position: absolute !important;
-                left: 0 !important;
                 top: 0 !important;
+                left: 0 !important;
                 width: 210mm !important;
                 height: 297mm !important;
                 min-height: 297mm !important;
@@ -50,20 +54,15 @@
                 border: none !important;
                 border-width: 0px !important;
                 outline: none !important;
-                border-style: none !important;
                 border-radius: 0px !important;
                 box-sizing: border-box !important;
                 page-break-after: avoid !important;
                 page-break-before: avoid !important;
-                overflow: hidden !important;
+                overflow: hidden !important; /* Previene páginas en blanco adicionales */
             }
             #print-area * {
                 box-shadow: none !important;
                 text-shadow: none !important;
-            }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
             }
         }
 
@@ -105,7 +104,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-955 text-slate-100 min-h-screen font-inter flex flex-col antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-inter flex flex-col antialiased">
 
     <!-- Sistema de Notificaciones Flotantes (Toasts) -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2 no-print"></div>
@@ -154,7 +153,7 @@
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Español Original</span>
                 </button>
-                <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
+                <button onclick="triggerPrint()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-print text-sm"></i>
                     <span>Guardar PDF / Imprimir</span>
                 </button>
@@ -407,7 +406,7 @@
                         <div class="pt-4 border-t border-slate-850">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Dominio de Idioma</span>
                             <div class="grid grid-cols-2 gap-2">
-                                <button onclick="setLanguage('Español (Nativo), Inglés (Básico)')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
+                                <button onclick="setLanguage('Español (Nativo), Inglés (Básico)')" class="bg-slate-950 hover:bg-slate-850 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
                                     <div class="font-extrabold text-white">Inglés Básico</div>
                                     <span class="text-[10px] text-slate-400">Español (Nativo), Inglés (Básico)</span>
                                 </button>
@@ -478,11 +477,19 @@
     </main>
 
     <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-xs text-slate-500 no-print">
-        <p>© 2026 Creador de Currículum Pro - Listo para alojar en GitHub Pages con soporte A4.</p>
+        <p>© 2026 Creador de Currículum Pro - Listo para alojar en GitHub Pages con soporte A4 estricto.</p>
     </footer>
 
     <!-- Lógica de Negocio y Estados -->
     <script>
+        // Función de impresión con recordatorio para el usuario
+        function triggerPrint() {
+            showToast("Generando PDF... Desmarca 'Encabezados y pies de página' si aparecen URLs.", "info");
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+
         // Catálogo de Habilidades Sugeridas y equivalentes en Inglés
         const SUGGESTED_SKILLS = {
             greens: [
@@ -598,9 +605,9 @@
         };
 
         // Estado de la Aplicación y Lenguaje Activo
-        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v7')) || JSON.parse(JSON.stringify(defaultSpanishData));
-        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v7')) || 1;
-        let currentLanguage = localStorage.getItem('current_language_gh_v7') || 'es';
+        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v8')) || JSON.parse(JSON.stringify(defaultSpanishData));
+        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v8')) || 1;
+        let currentLanguage = localStorage.getItem('current_language_gh_v8') || 'es';
 
         // Variables de ajuste fino inicializadas desde LocalStorage
         let fineFontSize = localStorage.getItem('cv_fine_font_size') || '11';
@@ -665,48 +672,7 @@
             renderSelectedTemplate();
         }
 
-        // Función para enviar Toast flotante
-        function showToast(message, type = "success") {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl border text-xs font-bold transition-all duration-300 transform translate-y-2 opacity-0 ${
-                type === "success" ? 'bg-emerald-950 border-emerald-500/30 text-emerald-300' : 'bg-indigo-950 border-indigo-500/30 text-indigo-300'
-            }`;
-            toast.innerHTML = `
-                <i class="${type === 'success' ? 'fa-solid fa-circle-check text-emerald-400' : 'fa-solid fa-language text-indigo-400'}"></i>
-                <span>${message}</span>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Modal de confirmación personalizado
-        function showConfirmModal(title, msg, onConfirm) {
-            const modal = document.getElementById('confirm-modal');
-            const titleEl = document.getElementById('confirm-title');
-            const msgEl = document.getElementById('confirm-message');
-            const cancelBtn = document.getElementById('confirm-cancel-btn');
-            const okBtn = document.getElementById('confirm-ok-btn');
-
-            titleEl.innerText = title;
-            msgEl.innerText = msg;
-            modal.classList.remove('hidden');
-
-            const closeModal = () => {
-                modal.classList.add('hidden');
-                cancelBtn.onclick = null;
-                okBtn.onclick = null;
-            };
-
-            cancelBtn.onclick = () => { closeModal(); };
-            okBtn.onclick = () => { onConfirm(); closeModal(); };
-        }
-
-        // Inicializador de los valores en pantalla
+        // Cargar los Datos en el Editor e Inputs
         function loadDataIntoInputs() {
             document.getElementById('input-name').value = cvData.name || '';
             document.getElementById('input-title').value = cvData.title || '';
@@ -843,7 +809,6 @@
         // AGREGAR Y ELIMINAR HABILIDADES
         function addSuggestedSkill(esName, enName) {
             const skillToAdd = currentLanguage === 'en' ? enName : esName;
-            
             if (!cvData.skills.includes(skillToAdd)) {
                 cvData.skills.push(skillToAdd);
                 saveState();
@@ -882,7 +847,6 @@
 
         function addSuggestedCert(esName, enName) {
             const certToAdd = currentLanguage === 'en' ? enName : esName;
-            
             if (!cvData.certs.includes(certToAdd)) {
                 cvData.certs.push(certToAdd);
                 saveState();
@@ -986,28 +950,15 @@
         function translateToEnglish() {
             currentLanguage = 'en';
 
-            // Traducir las habilidades y certificaciones activas
             cvData.skills = cvData.skills.map(skill => translateSkill(skill, 'en'));
             cvData.certs = cvData.certs.map(cert => translateCert(cert, 'en'));
 
-            // Swap de datos del perfil y secciones si corresponden a la plantilla por defecto
-            if (cvData.location === defaultSpanishData.location || cvData.location === "") {
-                cvData.location = defaultEnglishData.location;
-            }
-            if (cvData.title === defaultSpanishData.title) {
-                cvData.title = defaultEnglishData.title;
-            }
-            if (cvData.age === defaultSpanishData.age) {
-                cvData.age = defaultEnglishData.age;
-            }
-            if (cvData.summary === defaultSpanishData.summary) {
-                cvData.summary = defaultEnglishData.summary;
-            }
-            if (cvData.languages === defaultSpanishData.languages) {
-                cvData.languages = defaultEnglishData.languages;
-            }
+            if (cvData.location === defaultSpanishData.location || cvData.location === "") cvData.location = defaultEnglishData.location;
+            if (cvData.title === defaultSpanishData.title) cvData.title = defaultEnglishData.title;
+            if (cvData.age === defaultSpanishData.age) cvData.age = defaultEnglishData.age;
+            if (cvData.summary === defaultSpanishData.summary) cvData.summary = defaultEnglishData.summary;
+            if (cvData.languages === defaultSpanishData.languages) cvData.languages = defaultEnglishData.languages;
 
-            // Traducir cargos de experiencia predeterminados
             cvData.experience.forEach((exp, idx) => {
                 const defaultES = defaultSpanishData.experience[idx];
                 const defaultEN = defaultEnglishData.experience[idx];
@@ -1019,7 +970,6 @@
                 }
             });
 
-            // Traducir educación predeterminada
             cvData.education.forEach((edu, idx) => {
                 const defaultES = defaultSpanishData.education[idx];
                 const defaultEN = defaultEnglishData.education[idx];
@@ -1030,11 +980,10 @@
                 }
             });
 
-            // Ocultar foto y edad según estándares de EE. UU.
             cvData.showPhoto = false;
             cvData.showAge = false;
 
-            activeTemplateId = 3; // Plantilla ATS unificada por defecto
+            activeTemplateId = 3; 
             updateTemplateSelectorUI();
             saveState();
             loadDataIntoInputs();
@@ -1044,28 +993,15 @@
         function restoreSpanish() {
             currentLanguage = 'es';
 
-            // Traducir las habilidades y certificaciones activas de vuelta a español
             cvData.skills = cvData.skills.map(skill => translateSkill(skill, 'es'));
             cvData.certs = cvData.certs.map(cert => translateCert(cert, 'es'));
 
-            // Restaurar datos si corresponden a las plantillas por defecto en inglés
-            if (cvData.location === defaultEnglishData.location || cvData.location === "") {
-                cvData.location = defaultSpanishData.location;
-            }
-            if (cvData.title === defaultEnglishData.title) {
-                cvData.title = defaultSpanishData.title;
-            }
-            if (cvData.age === defaultEnglishData.age) {
-                cvData.age = defaultSpanishData.age;
-            }
-            if (cvData.summary === defaultEnglishData.summary) {
-                cvData.summary = defaultSpanishData.summary;
-            }
-            if (cvData.languages === defaultEnglishData.languages) {
-                cvData.languages = defaultSpanishData.languages;
-            }
+            if (cvData.location === defaultEnglishData.location || cvData.location === "") cvData.location = defaultSpanishData.location;
+            if (cvData.title === defaultEnglishData.title) cvData.title = defaultSpanishData.title;
+            if (cvData.age === defaultEnglishData.age) cvData.age = defaultSpanishData.age;
+            if (cvData.summary === defaultEnglishData.summary) cvData.summary = defaultSpanishData.summary;
+            if (cvData.languages === defaultEnglishData.languages) cvData.languages = defaultSpanishData.languages;
 
-            // Destraducir experiencia
             cvData.experience.forEach((exp, idx) => {
                 const defaultES = defaultSpanishData.experience[idx];
                 const defaultEN = defaultEnglishData.experience[idx];
@@ -1077,7 +1013,6 @@
                 }
             });
 
-            // Destraducir educación
             cvData.education.forEach((edu, idx) => {
                 const defaultES = defaultSpanishData.education[idx];
                 const defaultEN = defaultEnglishData.education[idx];
@@ -1088,7 +1023,6 @@
                 }
             });
 
-            // Mostrar foto y edad para el mercado latinoamericano
             cvData.showPhoto = true;
             cvData.showAge = true;
 
@@ -1101,9 +1035,9 @@
 
         // PERSISTENCIA DE ESTADO Y GUARDADO LOCAL
         function saveState() {
-            localStorage.setItem('saved_cv_data_gh_v7', JSON.stringify(cvData));
-            localStorage.setItem('active_template_id_gh_v7', activeTemplateId);
-            localStorage.setItem('current_language_gh_v7', currentLanguage);
+            localStorage.setItem('saved_cv_data_gh_v8', JSON.stringify(cvData));
+            localStorage.setItem('active_template_id_gh_v8', activeTemplateId);
+            localStorage.setItem('current_language_gh_v8', currentLanguage);
         }
 
         function updateCV() {
@@ -1204,12 +1138,11 @@
                 "¿Restablecer datos?",
                 "Esta acción borrará tus ediciones y volverá a cargar los datos de demostración del Salvador para Greenskeeper.",
                 () => {
-                    localStorage.removeItem('saved_cv_data_gh_v7');
+                    localStorage.removeItem('saved_cv_data_gh_v8');
                     cvData = JSON.parse(JSON.stringify(defaultSpanishData));
                     currentLanguage = 'es';
                     activeTemplateId = 1;
                     
-                    // Resetear sliders de compactación a los valores recomendados por defecto
                     document.getElementById('slider-font-size').value = 11;
                     document.getElementById('slider-padding').value = 15;
                     document.getElementById('slider-line-height').value = 1.35;
@@ -1314,20 +1247,17 @@
                 ? `| <span>${labelAge} ${cvData.age}</span>` 
                 : '';
 
-            // CSS dinámico incrustado según variables de compactación para controlar alturas exactas en A4
+            // CSS dinámico incrustado según variables de compactación
             const dynamicStyles = `
                 <style>
                     #print-area {
                         font-size: var(--cv-font-base, 11px) !important;
                         line-height: var(--cv-line-height, 1.35) !important;
                     }
-                    .cv-gap-sm { gap: calc(0.25rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-gap-md { gap: calc(0.5rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-gap-lg { gap: calc(1rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-mb-sm { margin-bottom: calc(0.25rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-mb-md { margin-bottom: calc(0.5rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-mb-lg { margin-bottom: calc(0.85rem * var(--cv-gap-multiplier, 1.0)); }
-                    .cv-h-rule { border-bottom-width: 1px; margin-bottom: calc(0.4rem * var(--cv-gap-multiplier, 1.0)); padding-bottom: 2px; }
+                    .cv-mb-sm { margin-bottom: 0.25rem; }
+                    .cv-mb-md { margin-bottom: 0.5rem; }
+                    .cv-mb-lg { margin-bottom: 0.85rem; }
+                    .cv-h-rule { border-bottom-width: 1px; margin-bottom: 0.4rem; padding-bottom: 2px; }
                 </style>
             `;
 
@@ -1501,7 +1431,7 @@
                     `;
                     break;
 
-                case 3: // ATS US Standard (Highly clean, text scan optimized, strictly single-page)
+                case 3: // ATS US Standard
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-black max-w-[680px] mx-auto h-full flex flex-col justify-between">
@@ -1581,7 +1511,7 @@
                                 <div class="text-center space-y-1 cv-mb-lg">
                                     <h2 class="text-2xl font-light tracking-wide text-slate-900">${cvData.name}</h2>
                                     <p class="text-[9px] font-semibold tracking-widest text-slate-400 uppercase">${cvData.title}</p>
-                                    <div class="flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1.5 border-t border-slate-100 max-w-md mx-auto">
+                                    <div class="flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1 border-t border-slate-100 max-w-md mx-auto">
                                         <span>${cvData.phone}</span>
                                         <span>•</span>
                                         <span>${cvData.email}</span>
@@ -1653,7 +1583,7 @@
                         <div class="font-outfit text-slate-850 h-full flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start border-b-2 border-amber-500 pb-2 cv-mb-md gap-4">
-                                    <div class="space-y-1.5">
+                                    <div class="space-y-1">
                                         <h2 class="text-xl font-black text-slate-900 tracking-tight leading-none">${cvData.name}</h2>
                                         <p class="text-[9px] font-bold tracking-widest text-amber-600 uppercase leading-none mt-1">${cvData.title}</p>
                                         <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-500 pt-1.5">
@@ -1669,7 +1599,7 @@
                                 <div class="space-y-3">
                                     <div>
                                         <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-amber-600 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Profile' : 'Resumen de Carrera'}</h3>
-                                        <p class="text-slate-655 leading-relaxed text-justify">${cvData.summary}</p>
+                                        <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
                                     </div>
 
                                     <div class="grid grid-cols-12 gap-4">
@@ -1683,8 +1613,8 @@
                                                                 <h4 class="font-bold text-slate-900">${exp.role}</h4>
                                                                 <span class="text-[8.5px] font-bold text-amber-600">${exp.dates}</span>
                                                             </div>
-                                                            <p class="text-[8.5px] font-medium text-slate-455 mb-1">${exp.company}</p>
-                                                            <ul class="list-disc pl-3 text-slate-655 space-y-0.5">
+                                                            <p class="text-[8.5px] font-medium text-slate-450 mb-1">${exp.company}</p>
+                                                            <ul class="list-disc pl-3 text-[9.5px] text-slate-650 space-y-0.5">
                                                                 ${formatDetails(exp.details)}
                                                             </ul>
                                                         </div>
@@ -1707,7 +1637,7 @@
                                                     ${(cvData.education || []).map(edu => `
                                                         <div>
                                                             <h4 class="text-[9px] font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                            <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
+                                                            <p class="text-[8px] text-slate-500 mt-0.5">${edu.institution}</p>
                                                             <span class="text-[8px] font-medium text-slate-450">${edu.dates}</span>
                                                         </div>
                                                     `).join('')}
@@ -1780,7 +1710,7 @@
                                                     <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
                                                 </div>
                                                 <p class="text-[8.5px] text-slate-450 italic mb-1">${exp.company}</p>
-                                                <ul class="list-disc pl-3 text-[10px] text-slate-655 space-y-0.5">
+                                                <ul class="list-disc pl-3 text-[10px] text-slate-650 space-y-0.5">
                                                     ${formatDetails(exp.details)}
                                                 </ul>
                                             </div>
@@ -1795,7 +1725,7 @@
                                             <div class="flex justify-between items-baseline avoid-break">
                                                 <div>
                                                     <h4 class="font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                    <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
+                                                    <p class="text-[8px] text-slate-500 mt-0.5">${edu.institution}</p>
                                                 </div>
                                                 <span class="text-[8px] text-slate-400 font-medium">${edu.dates}</span>
                                             </div>
@@ -1839,7 +1769,7 @@
                                             <div class="space-y-2">
                                                 ${(cvData.experience || []).map(exp => `
                                                     <div class="relative pl-3 border-l-2 border-teal-100 avoid-break">
-                                                        <span class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                                                        <span class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-teal-400"></span>
                                                         <div class="flex justify-between items-baseline mb-0.5">
                                                             <h4 class="font-bold text-slate-900">${exp.role}</h4>
                                                             <span class="text-[8px] font-bold text-teal-700">${exp.dates}</span>
@@ -1858,7 +1788,7 @@
                                         <div>
                                             <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 border-b-2 border-teal-50 cv-h-rule">${currentLanguage === 'en' ? 'Skills' : 'Especialidades'}</h3>
                                             <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-teal-50 text-teal-955 rounded-full px-2 py-0.5 text-[8.5px] font-semibold border border-teal-100")}
+                                                ${renderBadges(cvData.skills, "bg-teal-50 text-teal-950 rounded-full px-2 py-0.5 text-[8.5px] font-semibold border border-teal-100")}
                                             </div>
                                         </div>
 
@@ -1908,7 +1838,7 @@
                                         <div class="space-y-2">
                                             ${(cvData.experience || []).map(exp => `
                                                 <div class="bg-slate-50 p-1.5 border-l-4 border-slate-500 avoid-break">
-                                                    <div class="flex justify-between items-baseline font-bold text-slate-955">
+                                                    <div class="flex justify-between items-baseline font-bold text-slate-950">
                                                         <span class="text-[9px]">${exp.role}</span>
                                                         <span class="text-[8px]">${exp.dates}</span>
                                                     </div>
@@ -2096,3 +2026,4 @@
     </script>
 </body>
 </html>
+
