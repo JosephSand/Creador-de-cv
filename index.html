@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creador de Currículum Profesional A4 - Listo para GitHub Pages</title>
+    <title>Creador de Currículum Profesional A4</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,550;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -20,26 +20,30 @@
             --cv-line-height: 1.35;
         }
 
-        /* Estilos de impresión y exportación estricta a A4 */
+        /* ESTILOS ESTRICTOS PARA ELIMINAR FECHAS, URLs Y BORDES EN EL PDF */
         @media print {
             @page {
-                size: A4 portrait;
-                margin: 0 !important; /* Elimina cabeceras, pies de página, URLs y fechas de la impresión */
+                size: 210mm 297mm; /* Fuerza el tamaño exacto A4 */
+                margin: 0mm !important; /* ELIMINA FECHAS, URL Y TÍTULOS DEL NAVEGADOR */
             }
-            body {
-                background: white !important;
-                color: black !important;
+            html, body {
+                width: 210mm !important;
+                height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                background: white !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .no-print {
-                display: none !important; /* Oculta el editor, header y footer */
+                display: none !important;
             }
-            /* Elimina absolutamente cualquier borde negro, sombra o marco gris en el documento PDF final */
+            /* Configuración exacta del lienzo para la impresión */
             #print-area {
                 position: absolute !important;
-                left: 0 !important;
                 top: 0 !important;
+                left: 0 !important;
                 width: 210mm !important;
                 height: 297mm !important;
                 min-height: 297mm !important;
@@ -50,20 +54,15 @@
                 border: none !important;
                 border-width: 0px !important;
                 outline: none !important;
-                border-style: none !important;
                 border-radius: 0px !important;
                 box-sizing: border-box !important;
                 page-break-after: avoid !important;
                 page-break-before: avoid !important;
-                overflow: hidden !important;
+                overflow: hidden !important; /* Previene páginas en blanco adicionales */
             }
             #print-area * {
                 box-shadow: none !important;
                 text-shadow: none !important;
-            }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
             }
         }
 
@@ -86,7 +85,6 @@
         .font-inter { font-family: 'Inter', sans-serif; }
         .font-lora { font-family: 'Lora', serif; }
         .font-outfit { font-family: 'Outfit', sans-serif; }
-        .font-mono-custom { font-family: 'Space Mono', monospace; }
         .font-playfair { font-family: 'Playfair Display', serif; }
 
         /* Scrollbar suave en el área de edición */
@@ -138,10 +136,10 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
-                        Creador de CV Inteligente A4
-                        <span class="bg-slate-800 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-700">Página Única Completa</span>
+                        Creador de CV A4 Pro
+                        <span class="bg-slate-800 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-700">Formatos Formales</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Sin marcas de agua ni bordes negros. Optimizado para impresoras y PDF.</p>
+                    <p class="text-xs text-slate-400">Sin marcas de agua ni fondos negros. Especial para contrataciones de EE. UU.</p>
                 </div>
             </div>
             
@@ -154,7 +152,7 @@
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Español Original</span>
                 </button>
-                <!-- BOTÓN REPARADO (Uso directo y nativo) -->
+                <!-- BOTÓN DE IMPRESIÓN (Nativo y Directo) -->
                 <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-print text-sm"></i>
                     <span>Guardar PDF / Imprimir</span>
@@ -200,7 +198,6 @@
                     <p class="text-[10px] text-slate-400 leading-normal">Mueve los controles deslizantes para que tu currículum llene exactamente la página completa sin cortarse:</p>
                     
                     <div class="space-y-3">
-                        <!-- Control de tamaño de letra -->
                         <div class="space-y-1">
                             <div class="flex justify-between text-[10px] font-bold text-slate-300">
                                 <span>Tamaño de Letra</span>
@@ -209,7 +206,6 @@
                             <input type="range" id="slider-font-size" min="9" max="15" step="0.5" value="11" oninput="updateFineTuning()" class="w-full accent-emerald-500 bg-slate-900 rounded-lg appearance-none h-1.5 cursor-pointer">
                         </div>
 
-                        <!-- Control de márgenes -->
                         <div class="space-y-1">
                             <div class="flex justify-between text-[10px] font-bold text-slate-300">
                                 <span>Márgenes de la Hoja</span>
@@ -218,7 +214,6 @@
                             <input type="range" id="slider-padding" min="8" max="25" step="1" value="15" oninput="updateFineTuning()" class="w-full accent-emerald-500 bg-slate-900 rounded-lg appearance-none h-1.5 cursor-pointer">
                         </div>
 
-                        <!-- Control de espaciado de línea -->
                         <div class="space-y-1">
                             <div class="flex justify-between text-[10px] font-bold text-slate-300">
                                 <span>Espaciado / Altura de Línea</span>
@@ -271,7 +266,6 @@
                         </div>
                     </div>
 
-                    <!-- Configuración de Foto -->
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                         <label class="block text-[10px] font-bold uppercase tracking-wider text-emerald-400">Opciones de Visibilidad y Fotografía</label>
                         
@@ -285,7 +279,6 @@
                                 <label for="upload-photo" class="cursor-pointer bg-slate-850 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-750 inline-block transition">
                                     <i class="fa-solid fa-cloud-arrow-up mr-1 text-emerald-400"></i> Cargar Imagen
                                 </label>
-                                <p class="text-[10px] text-slate-500 mt-1">Soporta PNG, JPG y JPEG.</p>
                             </div>
                         </div>
                         
@@ -293,13 +286,13 @@
                             <div class="flex items-center gap-3">
                                 <input type="checkbox" id="toggle-photo" onchange="togglePhotoVisibility()" checked class="rounded border-slate-800 bg-slate-950 text-emerald-500 focus:ring-emerald-500 w-4 h-4">
                                 <label for="toggle-photo" class="text-xs text-slate-400 cursor-pointer select-none font-medium">
-                                    Mostrar foto en el CV (Se sugiere desactivar para procesos en EE. UU.)
+                                    Mostrar foto en el CV (Desactivar para EE. UU.)
                                 </label>
                             </div>
                             <div class="flex items-center gap-3">
                                 <input type="checkbox" id="toggle-age" onchange="toggleAgeVisibility()" checked class="rounded border-slate-800 bg-slate-950 text-emerald-500 focus:ring-emerald-500 w-4 h-4">
                                 <label for="toggle-age" class="text-xs text-slate-400 cursor-pointer select-none font-medium">
-                                    Mostrar edad en el CV (Se sugiere ocultar en EE. UU. / Antidiscriminación)
+                                    Mostrar edad en el CV (Ocultar para EE. UU.)
                                 </label>
                             </div>
                         </div>
@@ -339,7 +332,7 @@
                     <div id="education-list" class="space-y-4"></div>
                 </div>
 
-                <!-- Habilidades Asistidas (Selector Interactivo de un clic) -->
+                <!-- Habilidades Asistidas -->
                 <div id="section-skills" class="tab-content hidden space-y-6 animate-fadeIn">
                     <div>
                         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2 mb-3">
@@ -452,7 +445,7 @@
 
             <!-- Selector de Plantilla Fijo (Abajo del Editor) -->
             <div class="bg-slate-950 border-t border-slate-800 p-4 space-y-2">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selecciona la Plantilla (Cambia en vivo en el lienzo inferior):</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selecciona la Plantilla (Diseños Formales Actualizados):</p>
                 <div class="grid grid-cols-5 gap-1.5" id="template-selector"></div>
             </div>
         </section>
@@ -462,9 +455,9 @@
             <div class="w-full flex justify-between items-center px-4 py-2.5 bg-slate-900 border-b border-slate-800 rounded-t-xl no-print">
                 <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Vista Real de Página A4 Completa
+                    Vista Real de Página A4
                 </span>
-                <span class="text-[10px] bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-full text-slate-400 uppercase tracking-widest font-semibold">Dimensiones: 210mm x 297mm</span>
+                <span class="text-[10px] bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-full text-slate-400 uppercase tracking-widest font-semibold">210mm x 297mm</span>
             </div>
 
             <!-- Contenedor con scroll para simular visualización perfecta en cualquier monitor -->
@@ -479,7 +472,7 @@
     </main>
 
     <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-xs text-slate-500 no-print">
-        <p>© 2026 Creador de Currículum Pro - Listo para alojar en GitHub Pages con soporte A4 estricto.</p>
+        <p>© 2026 Creador de Currículum Pro - Diseños Formales de Alta Legibilidad.</p>
     </footer>
 
     <!-- Lógica de Negocio y Estados -->
@@ -521,7 +514,7 @@
             { es: "Certificación de Primeros Auxilios", en: "First Aid & CPR Certification" }
         ];
 
-        // Datos en Español preestablecidos (Con formato Array compatible en habilidades)
+        // Datos en Español preestablecidos
         const defaultSpanishData = {
             name: "JUAN CARLOS FLORES",
             title: "ESPECIALISTA EN MANTENIMIENTO DE ÁREAS VERDES / GREENSKEEPER",
@@ -599,27 +592,27 @@
         };
 
         // Estado de la Aplicación y Lenguaje Activo
-        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v10')) || JSON.parse(JSON.stringify(defaultSpanishData));
-        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v10')) || 1;
-        let currentLanguage = localStorage.getItem('current_language_gh_v10') || 'es';
+        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v11')) || JSON.parse(JSON.stringify(defaultSpanishData));
+        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v11')) || 1;
+        let currentLanguage = localStorage.getItem('current_language_gh_v11') || 'es';
 
         // Variables de ajuste fino inicializadas desde LocalStorage
-        let fineFontSize = localStorage.getItem('cv_fine_font_size_v1') || '11';
-        let finePadding = localStorage.getItem('cv_fine_padding_v1') || '15';
-        let fineLineHeight = localStorage.getItem('cv_fine_line_height_v1') || '1.35';
+        let fineFontSize = localStorage.getItem('cv_fine_font_size_v2') || '11';
+        let finePadding = localStorage.getItem('cv_fine_padding_v2') || '15';
+        let fineLineHeight = localStorage.getItem('cv_fine_line_height_v2') || '1.35';
 
-        // Lista de 10 Plantillas Profesionales
+        // Lista de 10 Plantillas Totalmente Rediseñadas y Formales
         const templates = [
-            { id: 1, name: "Senda Verde (Esmeralda)", desc: "Estilo ecológico ideal para áreas verdes y paisajismo." },
-            { id: 2, name: "Navy Corporativo", desc: "Clásico, elegante, con alta legibilidad corporativa." },
-            { id: 3, name: "ATS US Standard", desc: "Sin foto, minimalista. Especial para sistemas de selección de EE. UU." },
-            { id: 4, name: "Minimalista Moderno", desc: "Diseño despejado con tipografía Serif premium." },
-            { id: 5, name: "Élite Oro Negro", desc: "Tonos grafito y detalles ámbar profesionales." },
-            { id: 6, name: "Columna Dividida", desc: "Barra lateral oscura con información técnica compacta." },
-            { id: 7, name: "Teal Creativo", desc: "Moderno con detalles estilizados y bordes curvos." },
-            { id: 8, name: "Piedra y Acero", desc: "Industrial, robusto con estilo monospace." },
-            { id: 9, name: "Compacto Una Página", desc: "Márgenes cerrados para trayectorias de alta densidad." },
-            { id: 10, name: "Terracota Cálido", desc: "Tonos tierra inspiradores y tipografía de vanguardia." }
+            { id: 1, name: "Senda Verde", desc: "Clásica, limpia, con acentos en verde oscuro." },
+            { id: 2, name: "Azul Corporativo", desc: "Altamente formal, títulos en azul marino intenso." },
+            { id: 3, name: "ATS US Standard", desc: "Letra serif, centrada, 100% texto para software de EE. UU." },
+            { id: 4, name: "Limpieza Moderna", desc: "Alineada a la izquierda, tipografía premium, mucho espacio en blanco." },
+            { id: 5, name: "Élite Oro Negro", desc: "Diseño ejecutivo con títulos sutiles en tono ámbar/oro." },
+            { id: 6, name: "Profesional Dividido", desc: "Barra lateral gris muy claro, perfecto para separar habilidades de experiencia." },
+            { id: 7, name: "Elegancia Pura", desc: "Tipografía clásica, líneas sutiles, enfoque en la lectura." },
+            { id: 8, name: "Estándar Académico", desc: "Formato de texto tradicional, sin badges, ideal para instituciones formales." },
+            { id: 9, name: "Diseño Lateral", desc: "Los títulos de sección a la izquierda, contenido a la derecha." },
+            { id: 10, name: "Minimalista Formal", desc: "Optimización pura del espacio sin líneas, pura jerarquía de fuente." }
         ];
 
         // Función auxiliar de traducción bidireccional para Habilidades y Certificaciones
@@ -647,21 +640,18 @@
             const padding = document.getElementById('slider-padding').value;
             const lineHeight = document.getElementById('slider-line-height').value;
 
-            // Mostrar el valor numérico en el label
             document.getElementById('label-font-size').innerText = fontSize + 'px';
             document.getElementById('label-padding').innerText = padding + 'mm';
             document.getElementById('label-line-height').innerText = lineHeight;
 
-            // Actualizar variables de CSS globales
             const root = document.documentElement;
             root.style.setProperty('--cv-font-base', fontSize + 'px');
             root.style.setProperty('--cv-padding', padding + 'mm');
             root.style.setProperty('--cv-line-height', lineHeight);
 
-            // Guardar valores en LocalStorage
-            localStorage.setItem('cv_fine_font_size_v1', fontSize);
-            localStorage.setItem('cv_fine_padding_v1', padding);
-            localStorage.setItem('cv_fine_line_height_v1', lineHeight);
+            localStorage.setItem('cv_fine_font_size_v2', fontSize);
+            localStorage.setItem('cv_fine_padding_v2', padding);
+            localStorage.setItem('cv_fine_line_height_v2', lineHeight);
 
             renderSelectedTemplate();
         }
@@ -691,14 +681,11 @@
                 placeholder.classList.remove('hidden');
             }
 
-            // Inicializar sliders con los valores guardados
             document.getElementById('slider-font-size').value = fineFontSize;
             document.getElementById('slider-padding').value = finePadding;
             document.getElementById('slider-line-height').value = fineLineHeight;
 
-            // Forzar actualización de variables CSS segun los sliders cargados
             updateFineTuning();
-
             renderExperienceEditor();
             renderEducationEditor();
             renderActiveSkills();
@@ -776,7 +763,6 @@
             renderCategory('construction', 'suggested-construction-container');
             renderCategory('qualities', 'suggested-qualities-container');
 
-            // Renderizar Certificaciones Sugeridas
             const certsContainer = document.getElementById('suggested-certs-container');
             certsContainer.innerHTML = '';
             SUGGESTED_CERTS.forEach(item => {
@@ -836,7 +822,7 @@
             renderActiveSkills();
             renderSuggestions();
             renderSelectedTemplate();
-            showToast(`Eliminado: ${removed}`);
+            showToast(`Eliminada habilidad`);
         }
 
         function addSuggestedCert(esName, enName) {
@@ -1029,9 +1015,9 @@
 
         // PERSISTENCIA DE ESTADO Y GUARDADO LOCAL
         function saveState() {
-            localStorage.setItem('saved_cv_data_gh_v10', JSON.stringify(cvData));
-            localStorage.setItem('active_template_id_gh_v10', activeTemplateId);
-            localStorage.setItem('current_language_gh_v10', currentLanguage);
+            localStorage.setItem('saved_cv_data_gh_v11', JSON.stringify(cvData));
+            localStorage.setItem('active_template_id_gh_v11', activeTemplateId);
+            localStorage.setItem('current_language_gh_v11', currentLanguage);
         }
 
         function updateCV() {
@@ -1132,7 +1118,7 @@
                 "¿Restablecer datos?",
                 "Esta acción borrará tus ediciones y volverá a cargar los datos de demostración del Salvador para Greenskeeper.",
                 () => {
-                    localStorage.removeItem('saved_cv_data_gh_v10');
+                    localStorage.removeItem('saved_cv_data_gh_v11');
                     cvData = JSON.parse(JSON.stringify(defaultSpanishData));
                     currentLanguage = 'es';
                     activeTemplateId = 1;
@@ -1171,12 +1157,13 @@
                 selector.innerHTML += `
                     <button onclick="selectTemplate(${t.id})" 
                         title="${t.name}: ${t.desc}"
-                        class="h-9 text-xs font-black rounded-lg border transition flex items-center justify-center ${
+                        class="h-9 text-[10px] font-black rounded-lg border transition flex flex-col items-center justify-center leading-none p-1 ${
                             isActive 
                             ? 'bg-emerald-500 border-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20' 
                             : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
                         }">
-                        ${t.id}
+                        <span>${t.id}</span>
+                        <span class="text-[7px] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-full px-1 text-center font-normal opacity-80">${t.name}</span>
                     </button>
                 `;
             });
@@ -1191,10 +1178,10 @@
             updateTemplateSelectorUI();
             saveState();
             renderSelectedTemplate();
-            showToast(`Estilo de plantilla ${id} cargado`);
+            showToast(`Plantilla "${templates[id-1].name}" cargada`);
         }
 
-        // MOTOR DE RENDERIZADO DE LAS 10 PLANTILLAS
+        // MOTOR DE RENDERIZADO DE LAS 10 PLANTILLAS (REDISEÑO FORMAL Y PROFESIONAL)
         function renderSelectedTemplate() {
             const container = document.getElementById('resume-preview');
             let html = '';
@@ -1219,22 +1206,18 @@
                 return arr.map(item => `<span class="${badgeClass}">${item}</span>`).join(' ');
             };
 
-            const photoHtml = (cvData.showPhoto && cvData.photo) 
-                ? `<img src="${cvData.photo}" class="w-16 h-16 rounded-full object-cover border border-slate-350 shadow-sm flex-shrink-0">` 
+            const photoHtmlRound = (cvData.showPhoto && cvData.photo) 
+                ? `<img src="${cvData.photo}" class="w-16 h-16 rounded-full object-cover border border-slate-300 shadow-sm flex-shrink-0">` 
                 : '';
 
             const photoHtmlSquare = (cvData.showPhoto && cvData.photo) 
-                ? `<img src="${cvData.photo}" class="w-20 h-24 rounded-lg object-cover border border-slate-300 shadow-sm flex-shrink-0">` 
+                ? `<img src="${cvData.photo}" class="w-16 h-20 rounded object-cover border border-slate-300 shadow-sm flex-shrink-0">` 
                 : '';
 
             const labelAge = currentLanguage === 'en' ? 'Age:' : 'Edad:';
 
             const ageTag = (cvData.showAge && cvData.age) 
                 ? `<span><i class="fa-solid fa-cake-candles text-slate-400 mr-1"></i> ${cvData.age}</span>` 
-                : '';
-
-            const ageTagEmerald = (cvData.showAge && cvData.age) 
-                ? `<span><i class="fa-solid fa-cake-candles text-emerald-600 mr-1"></i> ${cvData.age}</span>` 
                 : '';
 
             const ageLabelStandard = (cvData.showAge && cvData.age) 
@@ -1256,7 +1239,7 @@
             `;
 
             switch(activeTemplateId) {
-                case 1: // Senda Verde (Esmeralda)
+                case 1: // Senda Verde (Esmeralda) - SE MANTIENE INTACTA
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-slate-800 h-full flex flex-col justify-between">
@@ -1264,26 +1247,24 @@
                                 <!-- Header -->
                                 <div class="flex items-center justify-between border-b-2 border-emerald-600 pb-2 cv-mb-md gap-4">
                                     <div class="space-y-0.5">
-                                        <h2 class="text-xl font-black text-emerald-850 tracking-tight leading-none">${cvData.name}</h2>
+                                        <h2 class="text-xl font-black text-emerald-800 tracking-tight leading-none">${cvData.name}</h2>
                                         <p class="text-[9px] font-bold tracking-widest text-emerald-600 uppercase leading-none mt-1">${cvData.title}</p>
                                         <div class="flex flex-wrap gap-x-2 gap-y-0.5 text-[9px] text-slate-500 mt-1">
                                             <span><i class="fa-solid fa-phone text-emerald-600 mr-0.5"></i> ${cvData.phone}</span>
                                             <span><i class="fa-solid fa-envelope text-emerald-600 mr-0.5"></i> ${cvData.email}</span>
                                             <span><i class="fa-solid fa-location-dot text-emerald-600 mr-0.5"></i> ${cvData.location}</span>
-                                            ${ageTagEmerald}
+                                            ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles text-emerald-600 mr-1"></i> ${cvData.age}</span>` : ''}
                                             ${cvData.link ? `<span><i class="fa-solid fa-link text-emerald-600 mr-0.5"></i> ${cvData.link}</span>` : ''}
                                         </div>
                                     </div>
-                                    ${photoHtml}
+                                    ${photoHtmlRound}
                                 </div>
 
-                                <!-- Perfil -->
                                 <div class="cv-mb-md">
                                     <h3 class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider border-b border-emerald-100 cv-h-rule">${currentLanguage === 'en' ? 'Professional Summary' : 'Perfil Profesional'}</h3>
-                                    <p class="text-slate-650 leading-normal text-justify">${cvData.summary}</p>
+                                    <p class="text-[11px] text-slate-650 leading-normal text-justify">${cvData.summary}</p>
                                 </div>
 
-                                <!-- Body columns -->
                                 <div class="grid grid-cols-3 gap-4">
                                     <div class="col-span-2 space-y-3">
                                         <div>
@@ -1295,7 +1276,7 @@
                                                             <h4 class="font-extrabold text-slate-900">${exp.role}</h4>
                                                             <span class="text-[9px] font-bold text-emerald-600">${exp.dates}</span>
                                                         </div>
-                                                        <p class="text-[9px] font-semibold text-slate-400 mb-0.5">${exp.company}</p>
+                                                        <p class="text-[9px] font-semibold text-slate-500 mb-0.5">${exp.company}</p>
                                                         <ul class="list-disc pl-3 text-[9.5px] text-slate-600 space-y-0.5">
                                                             ${formatDetails(exp.details)}
                                                         </ul>
@@ -1318,7 +1299,7 @@
                                             <div class="space-y-1.5">
                                                 ${(cvData.education || []).map(edu => `
                                                     <div>
-                                                        <h4 class="text-[9.5px] font-bold text-slate-900">${edu.degree}</h4>
+                                                        <h4 class="text-[9.5px] font-bold text-slate-900 leading-tight">${edu.degree}</h4>
                                                         <p class="text-[8.5px] text-slate-500">${edu.institution}</p>
                                                         <span class="text-[8.5px] font-semibold text-slate-400">${edu.dates}</span>
                                                     </div>
@@ -1346,44 +1327,42 @@
                     `;
                     break;
 
-                case 2: // Navy Corporativo
+                case 2: // Azul Corporativo (Blanco puro, sin marcos, texto en azul marino) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
                         <div class="font-outfit text-slate-800 h-full flex flex-col justify-between">
                             <div>
-                                <div class="bg-slate-900 text-white p-5 -mx-[16mm] -mt-[16mm] cv-mb-md flex justify-between items-center gap-4">
-                                    <div class="space-y-0.5">
-                                        <h2 class="text-xl font-bold tracking-tight text-white">${cvData.name}</h2>
-                                        <p class="text-[10px] font-light text-slate-300 tracking-wider uppercase">${cvData.title}</p>
-                                        <div class="flex flex-wrap gap-x-2.5 gap-y-0.5 text-[9px] text-slate-300 mt-1">
-                                            <span><i class="fa-solid fa-phone mr-0.5"></i> ${cvData.phone}</span>
-                                            <span><i class="fa-solid fa-envelope mr-0.5"></i> ${cvData.email}</span>
-                                            <span><i class="fa-solid fa-location-dot mr-0.5"></i> ${cvData.location}</span>
-                                            ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles mr-0.5 text-slate-300"></i> ${cvData.age}</span>` : ''}
-                                        </div>
+                                <!-- Header Minimalista Azul -->
+                                <div class="text-center border-b-2 border-blue-900 pb-3 cv-mb-md">
+                                    <h2 class="text-2xl font-bold tracking-tight text-blue-900 leading-none">${cvData.name}</h2>
+                                    <p class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1.5 leading-none">${cvData.title}</p>
+                                    <div class="flex justify-center flex-wrap gap-x-2.5 gap-y-0.5 text-[9.5px] text-slate-600 mt-2 font-medium">
+                                        <span>${cvData.phone}</span> •
+                                        <span>${cvData.email}</span> •
+                                        <span>${cvData.location}</span>
+                                        ${cvData.showAge && cvData.age ? `• <span>${cvData.age}</span>` : ''}
                                     </div>
-                                    ${photoHtml}
                                 </div>
 
                                 <div class="space-y-3">
-                                    <div class="cv-mb-md">
-                                        <h3 class="text-[10px] font-bold text-slate-900 uppercase tracking-wider border-l-4 border-slate-900 pl-2 cv-mb-sm">${currentLanguage === 'en' ? 'Profile Summary' : 'Perfil Profesional'}</h3>
-                                        <p class="text-slate-600 leading-normal text-justify">${cvData.summary}</p>
+                                    <div class="cv-mb-sm">
+                                        <h3 class="text-[10.5px] font-bold text-blue-900 uppercase tracking-wider border-b border-blue-200 cv-h-rule">${currentLanguage === 'en' ? 'Professional Profile' : 'Perfil Profesional'}</h3>
+                                        <p class="text-slate-700 leading-normal text-justify">${cvData.summary}</p>
                                     </div>
 
                                     <div class="grid grid-cols-3 gap-4">
                                         <div class="col-span-2 space-y-3">
                                             <div>
-                                                <h3 class="text-[10px] font-bold text-slate-900 uppercase tracking-wider border-l-4 border-slate-900 pl-2 cv-mb-sm">${currentLanguage === 'en' ? 'Employment' : 'Experiencia'}</h3>
+                                                <h3 class="text-[10.5px] font-bold text-blue-900 uppercase tracking-wider border-b border-blue-200 cv-h-rule">${currentLanguage === 'en' ? 'Employment Experience' : 'Experiencia Laboral'}</h3>
                                                 <div class="space-y-2">
                                                     ${(cvData.experience || []).map(exp => `
-                                                        <div class="border-l border-slate-200 pl-2.5 ml-1 avoid-break">
+                                                        <div class="avoid-break">
                                                             <div class="flex justify-between items-baseline">
                                                                 <h4 class="font-bold text-slate-900">${exp.role}</h4>
-                                                                <span class="text-[8px] font-bold text-slate-500">${exp.dates}</span>
+                                                                <span class="text-[8.5px] font-bold text-blue-800">${exp.dates}</span>
                                                             </div>
-                                                            <p class="text-[8.5px] font-bold text-slate-400 mb-0.5">${exp.company}</p>
-                                                            <ul class="list-disc pl-3 text-[9.5px] text-slate-600 space-y-0.5">
+                                                            <p class="text-[9px] font-semibold text-slate-500 mb-0.5">${exp.company}</p>
+                                                            <ul class="list-disc pl-3 text-[10px] text-slate-700 space-y-0.5">
                                                                 ${formatDetails(exp.details)}
                                                             </ul>
                                                         </div>
@@ -1394,18 +1373,18 @@
 
                                         <div class="col-span-1 space-y-3">
                                             <div>
-                                                <h3 class="text-[10px] font-bold text-slate-900 uppercase tracking-wider border-l-4 border-slate-900 pl-2 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Competencias'}</h3>
-                                                <div class="flex flex-col gap-1">
-                                                    ${renderBadges(cvData.skills, "bg-slate-100 text-slate-800 rounded px-1.5 py-0.5 text-[8.5px] border-r-2 border-slate-500 font-semibold")}
+                                                <h3 class="text-[10.5px] font-bold text-blue-900 uppercase tracking-wider border-b border-blue-200 cv-h-rule">${currentLanguage === 'en' ? 'Core Competencies' : 'Competencias Clave'}</h3>
+                                                <div class="flex flex-col gap-0.5">
+                                                    ${renderBadges(cvData.skills, "text-[9.5px] text-slate-700 font-medium before:content-['▸'] before:mr-1 before:text-blue-900")}
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <h3 class="text-[10px] font-bold text-slate-900 uppercase tracking-wider border-l-4 border-slate-900 pl-2 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                                <h3 class="text-[10.5px] font-bold text-blue-900 uppercase tracking-wider border-b border-blue-200 cv-h-rule">${currentLanguage === 'en' ? 'Education' : 'Formación Académica'}</h3>
                                                 <div class="space-y-1.5">
                                                     ${(cvData.education || []).map(edu => `
                                                         <div>
-                                                            <h4 class="text-[9.5px] font-bold text-slate-900">${edu.degree}</h4>
+                                                            <h4 class="text-[9.5px] font-bold text-slate-900 leading-tight">${edu.degree}</h4>
                                                             <p class="text-[8.5px] text-slate-500">${edu.institution}</p>
                                                             <span class="text-[8.5px] font-medium text-slate-400">${edu.dates}</span>
                                                         </div>
@@ -1414,8 +1393,8 @@
                                             </div>
 
                                             <div>
-                                                <h3 class="text-[10px] font-bold text-slate-900 uppercase tracking-wider border-l-4 border-slate-900 pl-2 cv-mb-sm">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
-                                                <p class="text-[9.5px] text-slate-600 font-bold">${cvData.languages}</p>
+                                                <h3 class="text-[10.5px] font-bold text-blue-900 uppercase tracking-wider border-b border-blue-200 cv-h-rule">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                                <p class="text-[9.5px] text-slate-700 font-medium">${cvData.languages}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1425,15 +1404,15 @@
                     `;
                     break;
 
-                case 3: // ATS US Standard (Highly clean, text scan optimized, strictly single-page)
+                case 3: // ATS US Standard (El más seguro para escáner, 100% texto clásico) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-inter text-black max-w-[680px] mx-auto h-full flex flex-col justify-between">
+                        <div class="font-lora text-black max-w-[700px] mx-auto h-full flex flex-col justify-between">
                             <div>
-                                <div class="text-center space-y-0.5 border-b border-black pb-2 cv-mb-md">
-                                    <h2 class="text-lg font-black text-black uppercase tracking-wide leading-none">${cvData.name}</h2>
-                                    <p class="text-[9.5px] font-bold text-slate-700 tracking-wider uppercase leading-none mt-1">${cvData.title}</p>
-                                    <div class="flex justify-center flex-wrap gap-x-2 gap-y-0.5 text-[9px] text-slate-600 mt-1">
+                                <div class="text-center space-y-0.5 border-b-2 border-black pb-2 cv-mb-md">
+                                    <h2 class="text-xl font-bold text-black uppercase tracking-wide leading-none">${cvData.name}</h2>
+                                    <p class="text-[10px] font-medium text-black tracking-widest uppercase leading-none mt-1">${cvData.title}</p>
+                                    <div class="flex justify-center flex-wrap gap-x-2 gap-y-0.5 text-[9.5px] text-black mt-1.5">
                                         <span>${cvData.phone}</span> |
                                         <span>${cvData.email}</span> |
                                         <span>${cvData.location}</span>
@@ -1444,23 +1423,23 @@
 
                                 <div class="space-y-3">
                                     <div>
-                                        <h3 class="text-[9.5px] font-black uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Summary' : 'Perfil Resumido'}</h3>
-                                        <p class="text-justify text-slate-800 leading-normal">${cvData.summary}</p>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Summary' : 'Resumen Profesional'}</h3>
+                                        <p class="text-justify text-black leading-normal">${cvData.summary}</p>
                                     </div>
 
                                     <div>
-                                        <h3 class="text-[9.5px] font-black uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Work Experience' : 'Experiencia Laboral'}</h3>
-                                        <div class="space-y-2">
+                                        <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Experience' : 'Experiencia Laboral'}</h3>
+                                        <div class="space-y-2.5">
                                             ${(cvData.experience || []).map(exp => `
                                                 <div class="avoid-break">
                                                     <div class="flex justify-between items-baseline font-bold text-black">
-                                                        <span class="text-[9.5px]">${exp.role}</span>
-                                                        <span class="text-[8.5px]">${exp.dates}</span>
+                                                        <span class="text-[10px]">${exp.role}</span>
+                                                        <span class="text-[9px]">${exp.dates}</span>
                                                     </div>
-                                                    <div class="flex justify-between items-baseline font-semibold text-slate-650 italic mb-0.5">
-                                                        <span>${exp.company}</span>
+                                                    <div class="flex justify-between items-baseline font-medium text-black italic mb-0.5">
+                                                        <span class="text-[9.5px]">${exp.company}</span>
                                                     </div>
-                                                    <ul class="list-disc pl-3 text-slate-800 space-y-0.5">
+                                                    <ul class="list-disc pl-4 text-black space-y-0.5">
                                                         ${formatDetails(exp.details)}
                                                     </ul>
                                                 </div>
@@ -1469,26 +1448,26 @@
                                     </div>
 
                                     <div>
-                                        <h3 class="text-[9.5px] font-black uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
                                         <div class="space-y-1">
                                             ${(cvData.education || []).map(edu => `
                                                 <div class="flex justify-between items-baseline avoid-break text-black">
                                                     <div>
-                                                        <span class="font-bold text-[9.5px]">${edu.degree}</span> - 
-                                                        <span class="text-slate-600 text-[9px]">${edu.institution}</span>
+                                                        <strong class="text-[9.5px]">${edu.degree}</strong>, 
+                                                        <span class="text-[9.5px]">${edu.institution}</span>
                                                     </div>
-                                                    <span class="font-bold text-slate-600 text-[8.5px]">${edu.dates}</span>
+                                                    <span class="font-bold text-[9px]">${edu.dates}</span>
                                                 </div>
                                             `).join('')}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 class="text-[9.5px] font-black uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Skills & Credentials' : 'Habilidades y Credenciales'}</h3>
-                                        <div class="space-y-1 text-slate-800 text-[9.5px]">
-                                            <p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Core Skills:' : 'Habilidades:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</p>
-                                            ${cvData.certs && cvData.certs.length > 0 ? `<p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Certifications:' : 'Certificaciones:'}</strong> ${cvData.certs.join(', ')}</p>` : ''}
-                                            <p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</p>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Skills & Additional Information' : 'Habilidades e Información Adicional'}</h3>
+                                        <div class="space-y-1 text-black text-[9.5px]">
+                                            <p><strong>${currentLanguage === 'en' ? 'Core Competencies:' : 'Competencias Clave:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</p>
+                                            ${cvData.certs && cvData.certs.length > 0 ? `<p><strong>${currentLanguage === 'en' ? 'Certifications:' : 'Certificaciones:'}</strong> ${cvData.certs.join(', ')}</p>` : ''}
+                                            <p><strong>${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1497,72 +1476,74 @@
                     `;
                     break;
 
-                case 4: // Minimalista Moderno
+                case 4: // Limpieza Moderna (Izquierda alineada, muy formal e inter) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-lora text-slate-800 h-full flex flex-col justify-between">
+                        <div class="font-inter text-slate-800 h-full flex flex-col justify-between">
                             <div>
-                                <div class="text-center space-y-1 cv-mb-lg">
-                                    <h2 class="text-2xl font-light tracking-wide text-slate-900">${cvData.name}</h2>
-                                    <p class="text-[9px] font-semibold tracking-widest text-slate-400 uppercase">${cvData.title}</p>
-                                    <div class="flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1 border-t border-slate-100 max-w-md mx-auto">
-                                        <span>${cvData.phone}</span>
-                                        <span>•</span>
-                                        <span>${cvData.email}</span>
-                                        <span>•</span>
-                                        <span>${cvData.location}</span>
-                                        ${cvData.showAge && cvData.age ? `<span>•</span> <span>${cvData.age}</span>` : ''}
+                                <div class="flex items-end justify-between cv-mb-lg border-b border-slate-300 pb-3">
+                                    <div class="space-y-1 w-2/3">
+                                        <h2 class="text-3xl font-light tracking-tight text-slate-900 leading-none">${cvData.name}</h2>
+                                        <p class="text-[10px] font-medium tracking-widest text-slate-500 uppercase">${cvData.title}</p>
+                                    </div>
+                                    <div class="w-1/3 text-right text-[8.5px] text-slate-500 space-y-0.5">
+                                        <p>${cvData.phone}</p>
+                                        <p>${cvData.email}</p>
+                                        <p>${cvData.location}</p>
+                                        ${cvData.showAge && cvData.age ? `<p>${cvData.age}</p>` : ''}
                                     </div>
                                 </div>
 
-                                <div class="space-y-3">
-                                    <div>
-                                        <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 cv-mb-sm">${currentLanguage === 'en' ? 'Summary' : 'Acerca de mí'}</h3>
-                                        <p class="text-slate-600 leading-relaxed text-justify">${cvData.summary}</p>
+                                <div class="space-y-3.5">
+                                    <div class="flex avoid-break">
+                                        <div class="w-1/4 pr-4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400">${currentLanguage === 'en' ? 'PROFILE' : 'PERFIL'}</h3>
+                                        </div>
+                                        <div class="w-3/4">
+                                            <p class="text-slate-700 leading-relaxed text-justify">${cvData.summary}</p>
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Timeline' : 'Trayectoria Profesional'}</h3>
-                                        <div class="space-y-3">
+                                    <div class="flex">
+                                        <div class="w-1/4 pr-4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 pt-1">${currentLanguage === 'en' ? 'EXPERIENCE' : 'EXPERIENCIA'}</h3>
+                                        </div>
+                                        <div class="w-3/4 space-y-3">
                                             ${(cvData.experience || []).map(exp => `
-                                                <div class="grid grid-cols-4 gap-2 avoid-break">
-                                                    <div class="col-span-1 text-right">
-                                                        <span class="text-[9px] font-semibold text-slate-400">${exp.dates}</span>
-                                                    </div>
-                                                    <div class="col-span-3">
+                                                <div class="avoid-break">
+                                                    <div class="flex justify-between items-baseline mb-0.5">
                                                         <h4 class="font-bold text-slate-900 leading-none">${exp.role}</h4>
-                                                        <p class="text-[8.5px] text-slate-400 italic mb-1 mt-0.5">${exp.company}</p>
-                                                        <ul class="list-disc pl-3 text-[9.5px] text-slate-650 space-y-0.5">
-                                                            ${formatDetails(exp.details)}
-                                                        </ul>
+                                                        <span class="text-[8.5px] font-medium text-slate-400">${exp.dates}</span>
                                                     </div>
+                                                    <p class="text-[9px] text-slate-500 italic mb-1">${exp.company}</p>
+                                                    <ul class="list-disc pl-3 text-[9.5px] text-slate-700 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
                                                 </div>
                                             `).join('')}
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-                                        <div>
-                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
-                                            <div class="space-y-1.5">
-                                                ${(cvData.education || []).map(edu => `
-                                                    <div>
-                                                        <h4 class="text-[9.5px] font-bold text-slate-900">${edu.degree}</h4>
-                                                        <p class="text-[8.5px] text-slate-500">${edu.institution}</p>
-                                                        <span class="text-[8.5px] text-slate-400">${edu.dates}</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
+                                    <div class="flex avoid-break pt-2">
+                                        <div class="w-1/4 pr-4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 pt-1">${currentLanguage === 'en' ? 'EDUCATION' : 'EDUCACIÓN'}</h3>
                                         </div>
-                                        <div>
-                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Competencias'}</h3>
-                                            <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-slate-50 text-slate-700 rounded px-1.5 py-0.5 text-[8.5px] border border-slate-200/50")}
-                                            </div>
-                                            <div class="mt-2">
-                                                <h4 class="text-[8px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h4>
-                                                <p class="text-[9.5px] text-slate-650">${cvData.languages}</p>
-                                            </div>
+                                        <div class="w-3/4 space-y-1.5">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <h4 class="text-[9.5px] font-bold text-slate-900">${edu.degree}</h4>
+                                                    <p class="text-[8.5px] text-slate-500">${edu.institution} <span class="mx-1">•</span> ${edu.dates}</p>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex avoid-break pt-1">
+                                        <div class="w-1/4 pr-4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 pt-1">${currentLanguage === 'en' ? 'SKILLS' : 'HABILIDADES'}</h3>
+                                        </div>
+                                        <div class="w-3/4 text-[9.5px] text-slate-700 leading-relaxed">
+                                            ${cvData.skills ? cvData.skills.join(' <span class="text-slate-300 mx-1">|</span> ') : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -1571,7 +1552,7 @@
                     `;
                     break;
 
-                case 5: // Élite Oro Negro
+                case 5: // Élite Oro Negro - SE MANTIENE INTACTA
                     html = `
                         ${dynamicStyles}
                         <div class="font-outfit text-slate-850 h-full flex flex-col justify-between">
@@ -1650,61 +1631,59 @@
                     `;
                     break;
 
-                case 6: // Columna Dividida
+                case 6: // Profesional Dividido (Color gris muy claro en el lateral, sin barras negras problemáticas) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-inter text-slate-800 flex h-full -mx-[16mm] -my-[16mm] text-xs">
-                            <div class="w-1/3 bg-slate-900 text-white p-5 min-h-[297mm] max-h-[297mm] flex flex-col justify-between">
+                        <div class="font-inter text-slate-800 flex h-full -mx-[var(--cv-padding)] -my-[var(--cv-padding)] text-xs">
+                            <div class="w-[32%] bg-slate-50 border-r border-slate-200 p-[var(--cv-padding)] min-h-[297mm] max-h-[297mm] flex flex-col">
                                 <div class="space-y-4">
-                                    <div class="text-center">
-                                        ${cvData.showPhoto && cvData.photo ? `<img src="${cvData.photo}" class="w-16 h-16 rounded-full mx-auto object-cover border-2 border-emerald-500 mb-2 shadow">` : ''}
-                                        <h2 class="text-xs font-bold tracking-tight text-white leading-tight">${cvData.name}</h2>
-                                        <p class="text-[8px] text-emerald-400 uppercase tracking-wider font-semibold mt-0.5 leading-tight">${cvData.title}</p>
+                                    <div class="text-center pb-2">
+                                        ${cvData.showPhoto && cvData.photo ? `<img src="${cvData.photo}" class="w-20 h-20 rounded-full mx-auto object-cover border border-slate-300 mb-2">` : ''}
+                                        <h2 class="text-sm font-bold tracking-tight text-slate-900 leading-tight">${cvData.name}</h2>
+                                        <p class="text-[8px] text-slate-500 uppercase tracking-widest font-bold mt-1 leading-tight">${cvData.title}</p>
                                     </div>
 
-                                    <div class="space-y-2 pt-2.5 border-t border-slate-800">
-                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Contact' : 'Contacto'}</h3>
-                                        <div class="space-y-1 text-[8.5px] text-slate-300">
-                                            <p class="flex items-center gap-1"><i class="fa-solid fa-phone w-3 text-emerald-500"></i> ${cvData.phone}</p>
-                                            <p class="flex items-center gap-1"><i class="fa-solid fa-envelope w-3 text-emerald-500"></i> ${cvData.email}</p>
-                                            <p class="flex items-center gap-1"><i class="fa-solid fa-location-dot w-3 text-emerald-500"></i> ${cvData.location}</p>
-                                            ${cvData.showAge && cvData.age ? `<p class="flex items-center gap-1"><i class="fa-solid fa-cake-candles w-3 text-emerald-500"></i> ${cvData.age}</p>` : ''}
+                                    <div class="space-y-1.5 pt-2 border-t border-slate-200">
+                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-slate-900">${currentLanguage === 'en' ? 'Contact' : 'Contacto'}</h3>
+                                        <div class="space-y-1 text-[8.5px] text-slate-600 font-medium">
+                                            <p>${cvData.phone}</p>
+                                            <p style="word-break: break-all;">${cvData.email}</p>
+                                            <p>${cvData.location}</p>
+                                            ${cvData.showAge && cvData.age ? `<p>${cvData.age}</p>` : ''}
                                         </div>
                                     </div>
 
-                                    <div class="space-y-1.5">
-                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
-                                        <div class="flex flex-wrap gap-1">
-                                            ${renderBadges(cvData.skills, "bg-slate-800 text-slate-200 rounded px-1.5 py-0.5 text-[8px] font-medium")}
-                                        </div>
+                                    <div class="space-y-1.5 pt-2 border-t border-slate-200">
+                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-slate-900">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
+                                        <ul class="list-none space-y-0.5 text-[8.5px] text-slate-600 font-medium">
+                                            ${(cvData.skills || []).map(s => `<li>• ${s}</li>`).join('')}
+                                        </ul>
                                     </div>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <div class="space-y-0.5 text-[8.5px] border-t border-slate-850 pt-2">
-                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
-                                        <p class="text-slate-300">${cvData.languages}</p>
+                                    
+                                    <div class="space-y-1.5 pt-2 border-t border-slate-200">
+                                        <h3 class="text-[9px] font-bold uppercase tracking-wider text-slate-900">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                        <p class="text-[8.5px] text-slate-600 font-medium">${cvData.languages}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="w-2/3 p-6 space-y-3.5">
+                            <div class="w-[68%] p-[var(--cv-padding)] space-y-4">
                                 <div>
-                                    <h3 class="text-[8.5px] font-bold uppercase tracking-widest text-slate-400 cv-mb-sm">${currentLanguage === 'en' ? 'Overview' : 'Objetivo'}</h3>
-                                    <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 border-b border-slate-200 cv-h-rule">${currentLanguage === 'en' ? 'Profile' : 'Perfil'}</h3>
+                                    <p class="text-slate-700 leading-relaxed text-justify">${cvData.summary}</p>
                                 </div>
 
                                 <div class="space-y-2.5">
-                                    <h3 class="text-[8.5px] font-bold uppercase tracking-widest text-slate-400 border-b border-slate-200 cv-h-rule">${currentLanguage === 'en' ? 'Employment History' : 'Historial de Empleo'}</h3>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 border-b border-slate-200 cv-h-rule">${currentLanguage === 'en' ? 'Work Experience' : 'Experiencia Laboral'}</h3>
                                     <div class="space-y-2">
                                         ${(cvData.experience || []).map(exp => `
                                             <div class="avoid-break">
                                                 <div class="flex justify-between items-baseline mb-0.5">
                                                     <h4 class="font-bold text-slate-900">${exp.role}</h4>
-                                                    <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
+                                                    <span class="text-[8.5px] font-semibold text-slate-500">${exp.dates}</span>
                                                 </div>
-                                                <p class="text-[8.5px] text-slate-450 italic mb-1">${exp.company}</p>
-                                                <ul class="list-disc pl-3 text-[10px] text-slate-650 space-y-0.5">
+                                                <p class="text-[9px] text-slate-500 font-medium mb-1">${exp.company}</p>
+                                                <ul class="list-disc pl-3 text-[9.5px] text-slate-700 space-y-0.5">
                                                     ${formatDetails(exp.details)}
                                                 </ul>
                                             </div>
@@ -1713,15 +1692,15 @@
                                 </div>
 
                                 <div class="space-y-2">
-                                    <h3 class="text-[8.5px] font-bold uppercase tracking-widest text-slate-400 border-b border-slate-200 cv-h-rule">${currentLanguage === 'en' ? 'Education' : 'Formación'}</h3>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 border-b border-slate-200 cv-h-rule">${currentLanguage === 'en' ? 'Education' : 'Formación Académica'}</h3>
                                     <div class="space-y-1.5">
                                         ${(cvData.education || []).map(edu => `
                                             <div class="flex justify-between items-baseline avoid-break">
                                                 <div>
                                                     <h4 class="font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                    <p class="text-[8px] text-slate-500 mt-0.5">${edu.institution}</p>
+                                                    <p class="text-[8.5px] text-slate-500 mt-0.5">${edu.institution}</p>
                                                 </div>
-                                                <span class="text-[8px] text-slate-400 font-medium">${edu.dates}</span>
+                                                <span class="text-[8.5px] text-slate-500 font-medium">${edu.dates}</span>
                                             </div>
                                         `).join('')}
                                     </div>
@@ -1731,71 +1710,78 @@
                     `;
                     break;
 
-                case 7: // Teal Creativo
+                case 7: // Elegancia Pura (Fuentes clásicas, títulos formales) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-outfit text-slate-800 h-full flex flex-col justify-between">
+                        <div class="font-playfair text-slate-800 h-full flex flex-col justify-between">
                             <div>
-                                <div class="bg-teal-50 border border-teal-100 p-4 rounded-xl cv-mb-md flex justify-between items-center gap-4">
-                                    <div class="space-y-0.5">
-                                        <span class="bg-teal-600 text-white text-[7.5px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">${currentLanguage === 'en' ? 'Certified Profile' : 'Perfil Certificado'}</span>
-                                        <h2 class="text-xl font-bold text-teal-950 mt-1 leading-none">${cvData.name}</h2>
-                                        <p class="text-[9.5px] font-semibold text-teal-700 uppercase leading-none mt-0.5">${cvData.title}</p>
-                                        <div class="flex flex-wrap gap-x-2.5 gap-y-0.5 text-[8.5px] text-slate-500 pt-1">
-                                            <span><i class="fa-solid fa-phone text-teal-600 mr-0.5"></i> ${cvData.phone}</span>
-                                            <span><i class="fa-solid fa-envelope text-teal-600 mr-0.5"></i> ${cvData.email}</span>
-                                            <span><i class="fa-solid fa-location-dot text-teal-600 mr-0.5"></i> ${cvData.location}</span>
-                                            ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles text-teal-600 mr-0.5"></i> ${cvData.age}</span>` : ''}
-                                        </div>
+                                <div class="text-center cv-mb-md">
+                                    <h2 class="text-3xl font-bold text-slate-900 leading-none mb-2">${cvData.name}</h2>
+                                    <p class="text-[10px] font-sans font-semibold tracking-widest text-slate-500 uppercase leading-none">${cvData.title}</p>
+                                </div>
+                                
+                                <div class="border-y border-slate-300 py-1.5 flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] font-sans text-slate-600 cv-mb-md">
+                                    <span>${cvData.phone}</span>
+                                    <span>|</span>
+                                    <span>${cvData.email}</span>
+                                    <span>|</span>
+                                    <span>${cvData.location}</span>
+                                    ${cvData.showAge && cvData.age ? `<span>|</span> <span>${cvData.age}</span>` : ''}
+                                </div>
+
+                                <div class="space-y-3.5">
+                                    <div>
+                                        <p class="text-slate-700 leading-relaxed text-center italic px-4 font-serif text-[10.5px]">"${cvData.summary}"</p>
                                     </div>
-                                    ${photoHtml}
-                                </div>
 
-                                <div class="cv-mb-md">
-                                    <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 cv-mb-sm">${currentLanguage === 'en' ? 'Profile Summary' : 'Resumen'}</h3>
-                                    <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
-                                </div>
-
-                                <div class="grid grid-cols-12 gap-4">
-                                    <div class="col-span-8 space-y-3">
-                                        <div>
-                                            <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 border-b-2 border-teal-50 cv-h-rule">${currentLanguage === 'en' ? 'Work Experience' : 'Historial Laboral'}</h3>
-                                            <div class="space-y-2">
-                                                ${(cvData.experience || []).map(exp => `
-                                                    <div class="relative pl-3 border-l-2 border-teal-100 avoid-break">
-                                                        <span class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-teal-400"></span>
-                                                        <div class="flex justify-between items-baseline mb-0.5">
-                                                            <h4 class="font-bold text-slate-900">${exp.role}</h4>
-                                                            <span class="text-[8px] font-bold text-teal-700">${exp.dates}</span>
-                                                        </div>
-                                                        <p class="text-[8px] text-slate-400 font-semibold mb-1">${exp.company}</p>
-                                                        <ul class="list-disc pl-3 text-[9.5px] text-slate-655 space-y-0.5">
-                                                            ${formatDetails(exp.details)}
-                                                        </ul>
+                                    <div>
+                                        <div class="flex items-center gap-2 cv-mb-sm">
+                                            <div class="h-[1px] bg-slate-300 flex-1"></div>
+                                            <h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-900 font-sans">${currentLanguage === 'en' ? 'Professional Experience' : 'Trayectoria Profesional'}</h3>
+                                            <div class="h-[1px] bg-slate-300 flex-1"></div>
+                                        </div>
+                                        <div class="space-y-3">
+                                            ${(cvData.experience || []).map(exp => `
+                                                <div class="avoid-break">
+                                                    <div class="flex justify-between items-baseline mb-0.5">
+                                                        <h4 class="font-bold text-slate-900 text-[11.5px]">${exp.role}</h4>
+                                                        <span class="text-[9px] font-sans text-slate-500">${exp.dates}</span>
                                                     </div>
-                                                `).join('')}
-                                            </div>
+                                                    <p class="text-[9.5px] text-slate-600 font-serif italic mb-1">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-[10px] font-sans text-slate-700 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
+                                                </div>
+                                            `).join('')}
                                         </div>
                                     </div>
 
-                                    <div class="col-span-4 space-y-3">
+                                    <div class="grid grid-cols-2 gap-6 pt-2">
                                         <div>
-                                            <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 border-b-2 border-teal-50 cv-h-rule">${currentLanguage === 'en' ? 'Skills' : 'Especialidades'}</h3>
-                                            <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-teal-50 text-teal-950 rounded-full px-2 py-0.5 text-[8.5px] font-semibold border border-teal-100")}
+                                            <div class="flex items-center gap-2 cv-mb-sm">
+                                                <div class="h-[1px] bg-slate-300 flex-1"></div>
+                                                <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 font-sans">${currentLanguage === 'en' ? 'Education' : 'Formación'}</h3>
+                                                <div class="h-[1px] bg-slate-300 flex-1"></div>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 border-b-2 border-teal-50 cv-h-rule">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
-                                            <div class="space-y-1.5">
+                                            <div class="space-y-1.5 font-sans">
                                                 ${(cvData.education || []).map(edu => `
-                                                    <div>
-                                                        <h4 class="text-[9px] font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                        <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
-                                                        <span class="text-[8px] font-medium text-slate-450">${edu.dates}</span>
+                                                    <div class="avoid-break">
+                                                        <h4 class="text-[9.5px] font-bold text-slate-900 leading-tight">${edu.degree}</h4>
+                                                        <p class="text-[8.5px] text-slate-500">${edu.institution} (${edu.dates})</p>
                                                     </div>
                                                 `).join('')}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="flex items-center gap-2 cv-mb-sm">
+                                                <div class="h-[1px] bg-slate-300 flex-1"></div>
+                                                <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 font-sans">${currentLanguage === 'en' ? 'Expertise' : 'Especialidad'}</h3>
+                                                <div class="h-[1px] bg-slate-300 flex-1"></div>
+                                            </div>
+                                            <div class="font-sans text-[9.5px] text-slate-700 space-y-1">
+                                                <p><strong>${currentLanguage === 'en' ? 'Skills:' : 'Habilidades:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</p>
+                                                <p><strong>${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1805,39 +1791,36 @@
                     `;
                     break;
 
-                case 8: // Piedra y Acero
+                case 8: // Estándar Académico (Oxford style, solo viñetas, nada de bloques, ultra formal) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-mono-custom text-slate-800 h-full flex flex-col justify-between">
+                        <div class="font-lora text-black h-full flex flex-col justify-between">
                             <div>
-                                <div class="border-2 border-slate-700 p-3.5 cv-mb-md">
-                                    <h2 class="text-lg font-bold text-slate-900 uppercase tracking-tight leading-none">${cvData.name}</h2>
-                                    <p class="text-[9px] font-bold text-slate-500 mb-1.5 uppercase">// ${cvData.title}</p>
-                                    <div class="grid grid-cols-2 gap-0.5 text-[8.5px] text-slate-500 border-t border-slate-200 pt-1.5 mt-1">
-                                        <span>TEL: ${cvData.phone}</span>
-                                        <span>EMAIL: ${cvData.email}</span>
-                                        <span>LOCATION: ${cvData.location}</span>
-                                        ${cvData.showAge && cvData.age ? `<span>AGE: ${cvData.age}</span>` : ''}
+                                <div class="cv-mb-md">
+                                    <h2 class="text-2xl font-bold text-black uppercase tracking-tight leading-none">${cvData.name}</h2>
+                                    <p class="text-[11px] text-black mb-1 mt-1 font-serif italic">${cvData.title}</p>
+                                    <div class="text-[9.5px] text-black">
+                                        <p>${cvData.phone} • ${cvData.email} • ${cvData.location} ${cvData.showAge && cvData.age ? `• ${cvData.age}` : ''}</p>
                                     </div>
                                 </div>
 
-                                <div class="space-y-3">
+                                <div class="space-y-3.5">
                                     <div>
-                                        <h3 class="text-[8.5px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 cv-mb-sm">:: ${currentLanguage === 'en' ? 'PROFILE SUMMARY' : 'PERFIL RESUMIDO'}</h3>
+                                        <h3 class="text-[10.5px] font-bold uppercase text-black border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'SUMMARY' : 'RESUMEN'}</h3>
                                         <p class="text-justify leading-normal">${cvData.summary}</p>
                                     </div>
 
                                     <div>
-                                        <h3 class="text-[8.5px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 cv-mb-sm">:: ${currentLanguage === 'en' ? 'PROFESSIONAL HISTORY' : 'HISTORIAL PROFESIONAL'}</h3>
-                                        <div class="space-y-2">
+                                        <h3 class="text-[10.5px] font-bold uppercase text-black border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'PROFESSIONAL EXPERIENCE' : 'EXPERIENCIA PROFESIONAL'}</h3>
+                                        <div class="space-y-2.5">
                                             ${(cvData.experience || []).map(exp => `
-                                                <div class="bg-slate-50 p-1.5 border-l-4 border-slate-500 avoid-break">
-                                                    <div class="flex justify-between items-baseline font-bold text-slate-950">
-                                                        <span class="text-[9px]">${exp.role}</span>
-                                                        <span class="text-[8px]">${exp.dates}</span>
+                                                <div class="avoid-break">
+                                                    <div class="flex justify-between items-baseline text-black">
+                                                        <strong class="text-[10.5px]">${exp.role}</strong>
+                                                        <span class="text-[9px]">${exp.dates}</span>
                                                     </div>
-                                                    <p class="text-slate-500 text-[8px] font-medium mb-1">${exp.company}</p>
-                                                    <ul class="list-disc pl-3 text-slate-700 text-[9px] space-y-0.5">
+                                                    <p class="text-black text-[9.5px] mb-0.5">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-black space-y-0.5">
                                                         ${formatDetails(exp.details)}
                                                     </ul>
                                                 </div>
@@ -1845,24 +1828,25 @@
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <h3 class="text-[8.5px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 cv-mb-sm">:: ${currentLanguage === 'en' ? 'EDUCATION' : 'ESTUDIOS'}</h3>
-                                            <div class="space-y-1.5">
-                                                ${(cvData.education || []).map(edu => `
-                                                    <div>
-                                                        <span class="font-bold block text-[10px]">${edu.degree}</span>
-                                                        <span class="text-slate-500 text-[9px] block">${edu.institution} (${edu.dates})</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
+                                    <div>
+                                        <h3 class="text-[10.5px] font-bold uppercase text-black border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'EDUCATION' : 'EDUCACIÓN'}</h3>
+                                        <div class="space-y-1.5">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div class="flex justify-between avoid-break">
+                                                    <span class="text-[10px] text-black"><strong>${edu.degree}</strong>, ${edu.institution}</span>
+                                                    <span class="text-[9px] text-black">${edu.dates}</span>
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                        <div>
-                                            <h3 class="text-[8.5px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 cv-mb-sm">:: ${currentLanguage === 'en' ? 'CAPABILITIES' : 'APTITUDES'}</h3>
-                                            <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[8px]")}
-                                            </div>
-                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h3 class="text-[10.5px] font-bold uppercase text-black border-b border-black pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'ADDITIONAL INFORMATION' : 'INFORMACIÓN ADICIONAL'}</h3>
+                                        <ul class="list-disc pl-4 text-black space-y-0.5">
+                                            <li><strong>${currentLanguage === 'en' ? 'Skills:' : 'Habilidades:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</li>
+                                            ${cvData.certs && cvData.certs.length > 0 ? `<li><strong>${currentLanguage === 'en' ? 'Certifications:' : 'Certificaciones:'}</strong> ${cvData.certs.join(', ')}</li>` : ''}
+                                            <li><strong>${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -1870,38 +1854,40 @@
                     `;
                     break;
 
-                case 9: // Compacto Una Página
+                case 9: // Diseño Lateral (Títulos a la izquierda, Harvard style side layout) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-slate-800 h-full flex flex-col justify-between">
                             <div>
-                                <div class="text-center pb-1.5 border-b border-slate-300 cv-mb-sm flex justify-between items-center gap-4">
-                                    <div class="text-left">
-                                        <h2 class="text-lg font-black text-slate-900 leading-none">${cvData.name}</h2>
-                                        <p class="text-[8.5px] font-bold text-emerald-700 uppercase tracking-wider leading-none mt-1">${cvData.title}</p>
-                                    </div>
-                                    <div class="text-right text-[8px] text-slate-500 space-y-0.5 leading-none">
-                                        <p><i class="fa-solid fa-phone"></i> ${cvData.phone} | <i class="fa-solid fa-envelope"></i> ${cvData.email}</p>
-                                        <p><i class="fa-solid fa-location-dot"></i> ${cvData.location} ${cvData.showAge && cvData.age ? ` | ${cvData.age}` : ''}</p>
-                                    </div>
+                                <div class="border-b-2 border-slate-800 pb-2 cv-mb-md text-right">
+                                    <h2 class="text-2xl font-black text-slate-900 leading-none">${cvData.name}</h2>
+                                    <p class="text-[9.5px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-1.5">${cvData.title}</p>
+                                    <p class="text-[8.5px] text-slate-500 mt-1">${cvData.phone} | ${cvData.email} | ${cvData.location} ${cvData.showAge && cvData.age ? ` | ${cvData.age}` : ''}</p>
                                 </div>
 
-                                <div class="cv-mb-sm">
-                                    <p class="text-slate-655 text-justify">${cvData.summary}</p>
-                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex avoid-break">
+                                        <div class="w-1/4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-800">${currentLanguage === 'en' ? 'SUMMARY' : 'RESUMEN'}</h3>
+                                        </div>
+                                        <div class="w-3/4">
+                                            <p class="text-slate-700 leading-relaxed text-justify">${cvData.summary}</p>
+                                        </div>
+                                    </div>
 
-                                <div class="space-y-2.5">
-                                    <div>
-                                        <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Experiencia'}</h3>
-                                        <div class="space-y-1.5">
+                                    <div class="flex">
+                                        <div class="w-1/4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-800">${currentLanguage === 'en' ? 'EXPERIENCE' : 'EXPERIENCIA'}</h3>
+                                        </div>
+                                        <div class="w-3/4 space-y-2.5">
                                             ${(cvData.experience || []).map(exp => `
                                                 <div class="avoid-break">
                                                     <div class="flex justify-between items-baseline font-bold text-slate-900">
                                                         <span>${exp.role}</span>
-                                                        <span class="font-semibold text-slate-500 text-[8px]">${exp.dates}</span>
+                                                        <span class="text-[8.5px]">${exp.dates}</span>
                                                     </div>
-                                                    <p class="text-slate-400 font-semibold text-[8px] mb-0.5">${exp.company}</p>
-                                                    <ul class="list-disc pl-3 space-y-0.5 text-slate-655 text-[9.5px]">
+                                                    <p class="text-slate-500 font-medium text-[9px] mb-0.5">${exp.company}</p>
+                                                    <ul class="list-disc pl-3 text-slate-700 space-y-0.5">
                                                         ${formatDetails(exp.details)}
                                                     </ul>
                                                 </div>
@@ -1909,23 +1895,28 @@
                                         </div>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-4 pt-1.5 border-t border-slate-150">
-                                        <div>
-                                            <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
-                                            <div class="space-y-1.5">
-                                                ${(cvData.education || []).map(edu => `
-                                                    <div>
-                                                        <span class="font-bold block text-[8.5px] leading-tight">${edu.degree}</span>
-                                                        <span class="text-slate-500 block text-[8px]">${edu.institution} (${edu.dates})</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
+                                    <div class="flex avoid-break pt-1">
+                                        <div class="w-1/4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-800">${currentLanguage === 'en' ? 'EDUCATION' : 'EDUCACIÓN'}</h3>
                                         </div>
-                                        <div>
-                                            <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
-                                            <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-slate-100 text-slate-800 rounded px-1.5 py-0.5 text-[8px] font-semibold")}
-                                            </div>
+                                        <div class="w-3/4 space-y-1">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div class="flex justify-between">
+                                                    <span class="font-bold text-slate-900 text-[10px]">${edu.degree}</span>
+                                                    <span class="text-slate-500 text-[8.5px]">${edu.dates}</span>
+                                                </div>
+                                                <p class="text-slate-600 text-[9px]">${edu.institution}</p>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex avoid-break pt-1">
+                                        <div class="w-1/4">
+                                            <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-800">${currentLanguage === 'en' ? 'SKILLS' : 'HABILIDADES'}</h3>
+                                        </div>
+                                        <div class="w-3/4 text-[9.5px] text-slate-700">
+                                            <p class="mb-0.5"><strong>${currentLanguage === 'en' ? 'Core:' : 'Técnicas:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</p>
+                                            <p><strong>${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1934,72 +1925,62 @@
                     `;
                     break;
 
-                case 10: // Terracota Cálido
+                case 10: // Minimalista Formal (Sin líneas, puro espaciado) - REDISEÑADO
                     html = `
                         ${dynamicStyles}
-                        <div class="font-lora text-slate-800 h-full flex flex-col justify-between animate-fadeIn">
+                        <div class="font-inter text-slate-800 h-full flex flex-col justify-between animate-fadeIn">
                             <div>
-                                <div class="flex items-center justify-between border-b-2 border-orange-200 pb-2 cv-mb-md gap-4">
-                                    <div class="space-y-0.5">
-                                        <h2 class="text-xl font-bold text-orange-950 leading-none">${cvData.name}</h2>
-                                        <p class="text-[9.5px] font-semibold tracking-wider text-orange-700 uppercase mt-1 leading-none">${cvData.title}</p>
-                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-slate-500 pt-1.5">
-                                            <span>${cvData.phone}</span>
-                                            <span>${cvData.email}</span>
-                                            <span>${cvData.location}</span>
-                                            ${cvData.showAge && cvData.age ? `<span>${cvData.age}</span>` : ''}
-                                        </div>
-                                    </div>
-                                    ${photoHtml}
+                                <div class="text-left cv-mb-lg">
+                                    <h2 class="text-2xl font-black text-slate-900 leading-none">${cvData.name}</h2>
+                                    <p class="text-[10px] font-bold text-slate-500 uppercase mt-1.5 leading-none">${cvData.title}</p>
+                                    <p class="text-[8.5px] text-slate-500 mt-2 font-medium">
+                                        ${cvData.phone} &nbsp;•&nbsp; ${cvData.email} &nbsp;•&nbsp; ${cvData.location}
+                                        ${cvData.showAge && cvData.age ? `&nbsp;•&nbsp; ${cvData.age}` : ''}
+                                    </p>
                                 </div>
 
-                                <div class="space-y-3">
+                                <div class="space-y-4">
                                     <div>
-                                        <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Profile' : 'Perfil Profesional'}</h3>
-                                        <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                                        <h3 class="text-[10.5px] font-bold uppercase text-slate-900 cv-mb-sm">${currentLanguage === 'en' ? 'Profile' : 'Perfil Profesional'}</h3>
+                                        <p class="text-slate-600 leading-relaxed text-justify">${cvData.summary}</p>
                                     </div>
 
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <div class="col-span-2 space-y-4">
-                                            <div>
-                                                <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Trayectoria'}</h3>
-                                                <div class="space-y-2.5">
-                                                    ${(cvData.experience || []).map(exp => `
-                                                        <div class="avoid-break">
-                                                            <div class="flex justify-between items-baseline mb-0.5">
-                                                                <h4 class="font-bold text-slate-900">${exp.role}</h4>
-                                                                <span class="text-[8.5px] font-semibold text-orange-700">${exp.dates}</span>
-                                                            </div>
-                                                            <p class="text-[8.5px] text-slate-400 font-semibold mb-1">${exp.company}</p>
-                                                            <ul class="list-disc pl-3 text-[9.5px] text-slate-650 space-y-0.5">
-                                                                ${formatDetails(exp.details)}
-                                                            </ul>
-                                                        </div>
-                                                    `).join('')}
+                                    <div>
+                                        <h3 class="text-[10.5px] font-bold uppercase text-slate-900 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Trayectoria'}</h3>
+                                        <div class="space-y-3">
+                                            ${(cvData.experience || []).map(exp => `
+                                                <div class="avoid-break">
+                                                    <div class="flex justify-between items-baseline mb-0.5">
+                                                        <h4 class="font-bold text-slate-800">${exp.role}</h4>
+                                                        <span class="text-[8.5px] font-semibold text-slate-400">${exp.dates}</span>
+                                                    </div>
+                                                    <p class="text-[9px] text-slate-500 font-medium mb-1">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-slate-600 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
                                                 </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-6">
+                                        <div>
+                                            <h3 class="text-[10.5px] font-bold uppercase text-slate-900 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                            <div class="space-y-1.5">
+                                                ${(cvData.education || []).map(edu => `
+                                                    <div>
+                                                        <h4 class="font-bold text-slate-800 leading-none text-[10px]">${edu.degree}</h4>
+                                                        <p class="text-[8.5px] text-slate-500 mt-0.5">${edu.institution}</p>
+                                                    </div>
+                                                `).join('')}
                                             </div>
                                         </div>
-
-                                        <div class="col-span-1 space-y-4">
-                                            <div>
-                                                <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Destrezas'}</h3>
-                                                <div class="flex flex-wrap gap-1">
-                                                    ${renderBadges(cvData.skills, "bg-orange-50 text-orange-950 border border-orange-100 rounded px-1.5 py-0.5 text-[8.5px]")}
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
-                                                <div class="space-y-1.5">
-                                                    ${(cvData.education || []).map(edu => `
-                                                        <div>
-                                                            <h4 class="text-[9px] font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                            <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
-                                                            <span class="text-[8px] font-medium text-slate-455">${edu.dates}</span>
-                                                        </div>
-                                                    `).join('')}
-                                                </div>
-                                            </div>
+                                        
+                                        <div>
+                                            <h3 class="text-[10.5px] font-bold uppercase text-slate-900 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Destrezas'}</h3>
+                                            <p class="text-slate-600 text-[9.5px] leading-relaxed">
+                                                ${cvData.skills ? cvData.skills.join(' • ') : ''}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -2020,5 +2001,4 @@
     </script>
 </body>
 </html>
-
 
