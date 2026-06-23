@@ -1,0 +1,1927 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Currículum Profesional - Listo para GitHub Pages</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,550;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Estilos de impresión y exportación en PDF */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #print-area {
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .avoid-break {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+        
+        /* Definiciones Tipográficas */
+        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-lora { font-family: 'Lora', serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .font-mono-custom { font-family: 'Space Mono', monospace; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+
+        /* Scrollbar suave en el área de edición */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-inter flex flex-col antialiased">
+
+    <!-- Sistema de Notificaciones Flotantes (Toasts) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2 no-print"></div>
+
+    <!-- Diálogo de Confirmación Personalizado -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden no-print">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+            <div class="flex items-center gap-3 text-amber-500">
+                <i class="fa-solid fa-triangle-exclamation text-2xl animate-pulse"></i>
+                <h4 class="text-base font-extrabold text-white" id="confirm-title">¿Estás seguro?</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed" id="confirm-message">Esta acción reemplazará toda tu información guardada actual.</p>
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition">
+                    Cancelar
+                </button>
+                <button id="confirm-ok-btn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado de la Aplicación (No Print) -->
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 no-print shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-xl shadow-lg shadow-emerald-900/30">
+                    <i class="fa-solid fa-file-pdf text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
+                        Creador de CV Inteligente
+                        <span class="bg-slate-800 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-700">Edición en Vivo</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Optimizado para vacantes internacionales y visados H-2B en EE. UU.</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="translateToEnglish()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition duration-200 shadow-md">
+                    <i class="fa-solid fa-language text-sm"></i>
+                    <span>Traducir al Inglés (EE. UU.)</span>
+                </button>
+                <button onclick="restoreSpanish()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition duration-200 border border-slate-700">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Español Original</span>
+                </button>
+                <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
+                    <i class="fa-solid fa-print text-sm"></i>
+                    <span>Guardar PDF / Imprimir</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Espacio de trabajo dual -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
+        
+        <!-- EDITOR PANEL (Izquierda) -->
+        <section class="lg:col-span-5 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col h-[calc(100vh-140px)] no-print shadow-2xl overflow-hidden">
+            
+            <!-- Pestañas de Navegación -->
+            <div class="flex border-b border-slate-800 overflow-x-auto custom-scrollbar">
+                <button onclick="switchTab('personal')" id="tab-personal" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400 flex items-center gap-2 whitespace-nowrap transition-all duration-150">
+                    <i class="fa-solid fa-user"></i> Datos Personales
+                </button>
+                <button onclick="switchTab('experience')" id="tab-experience" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap transition-all duration-150">
+                    <i class="fa-solid fa-briefcase"></i> Experiencia
+                </button>
+                <button onclick="switchTab('education')" id="tab-education" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap transition-all duration-150">
+                    <i class="fa-solid fa-graduation-cap"></i> Educación
+                </button>
+                <button onclick="switchTab('skills')" id="tab-skills" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap transition-all duration-150">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Habilidades Asistidas
+                </button>
+                <button onclick="switchTab('usa-tips')" id="tab-usa-tips" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-amber-400 hover:text-amber-300 flex items-center gap-2 whitespace-nowrap transition-all duration-150">
+                    <i class="fa-solid fa-circle-info"></i> Guía EE.UU.
+                </button>
+            </div>
+
+            <!-- Formularios de Entrada -->
+            <div class="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-6">
+                
+                <!-- Datos Personales -->
+                <div id="section-personal" class="tab-content space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-address-card text-emerald-500"></i> Información Personal
+                        </h3>
+                        <button onclick="requestResetToDefaults()" class="text-[10px] text-slate-400 hover:text-rose-400 transition flex items-center gap-1">
+                            <i class="fa-solid fa-trash-arrow-up"></i> Reiniciar Plantilla
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nombre Completo</label>
+                            <input type="text" id="input-name" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Título Profesional</label>
+                            <input type="text" id="input-title" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Edad</label>
+                            <input type="text" id="input-age" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition" placeholder="ej: 26 años">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Teléfono</label>
+                            <input type="text" id="input-phone" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Correo Electrónico</label>
+                            <input type="email" id="input-email" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Ubicación / País de Origen</label>
+                            <input type="text" id="input-location" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Enlace Opcional (LinkedIn / Portafolio)</label>
+                            <input type="text" id="input-link" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                    </div>
+
+                    <!-- Configuración de Foto -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-emerald-400">Opciones de Visibilidad y Fotografía</label>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-full bg-slate-900 border-2 border-slate-700 overflow-hidden flex items-center justify-center relative shadow-md flex-shrink-0">
+                                <img id="preview-photo" src="" class="w-full h-full object-cover hidden">
+                                <i id="photo-placeholder" class="fa-solid fa-user-check text-slate-500 text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="upload-photo" onchange="handlePhotoUpload(event)" class="hidden" accept="image/*">
+                                <label for="upload-photo" class="cursor-pointer bg-slate-850 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-750 inline-block transition">
+                                    <i class="fa-solid fa-cloud-arrow-up mr-1 text-emerald-400"></i> Cargar Imagen
+                                </label>
+                                <p class="text-[10px] text-slate-500 mt-1">Soporta PNG, JPG y JPEG.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col gap-2.5 pt-3 border-t border-slate-850">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="toggle-photo" onchange="togglePhotoVisibility()" checked class="rounded border-slate-800 bg-slate-950 text-emerald-500 focus:ring-emerald-500 w-4 h-4">
+                                <label for="toggle-photo" class="text-xs text-slate-400 cursor-pointer select-none font-medium">
+                                    Mostrar foto en el CV (Se sugiere desactivar para procesos en EE. UU.)
+                                </label>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="toggle-age" onchange="toggleAgeVisibility()" checked class="rounded border-slate-800 bg-slate-950 text-emerald-500 focus:ring-emerald-500 w-4 h-4">
+                                <label for="toggle-age" class="text-xs text-slate-400 cursor-pointer select-none font-medium">
+                                    Mostrar edad en el CV (Se sugiere ocultar en EE. UU. / Antidiscriminación)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Perfil Profesional</label>
+                        <textarea id="input-summary" oninput="updateCV()" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500 custom-scrollbar transition"></textarea>
+                    </div>
+                </div>
+
+                <!-- Experiencia Laboral -->
+                <div id="section-experience" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-emerald-500"></i> Historial de Cargos
+                        </h3>
+                        <button onclick="addExperience()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 transition shadow-lg shadow-emerald-950/20">
+                            <i class="fa-solid fa-plus"></i> Añadir Trabajo
+                        </button>
+                    </div>
+
+                    <div id="experience-list" class="space-y-4"></div>
+                </div>
+
+                <!-- Formación Académica -->
+                <div id="section-education" class="tab-content hidden space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-emerald-500"></i> Educación Básica y Cursos
+                        </h3>
+                        <button onclick="addEducation()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 transition shadow-lg shadow-emerald-950/20">
+                            <i class="fa-solid fa-plus"></i> Añadir Registro
+                        </button>
+                    </div>
+
+                    <div id="education-list" class="space-y-4"></div>
+                </div>
+
+                <!-- Habilidades Asistidas (Selector Interactivo de un clic) -->
+                <div id="section-skills" class="tab-content hidden space-y-6 animate-fadeIn">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-screwdriver-wrench text-emerald-500"></i> Habilidades del Postulante
+                        </h3>
+                        <!-- Listado de Habilidades Seleccionadas -->
+                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 min-h-[60px] flex flex-wrap gap-2 shadow-inner" id="active-skills-container"></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">¿Deseas agregar otra habilidad manualmente?</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="manual-skill-input" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" placeholder="Ej: Poda de Palmeras, Riego por Goteo...">
+                            <button onclick="addManualSkill()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex-shrink-0">
+                                <i class="fa-solid fa-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel de sugerencias instantáneas -->
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-emerald-400 border-b border-slate-850 pb-1">Selección Rápida (Haz clic para agregar):</h4>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5"><i class="fa-solid fa-tree text-emerald-500 mr-1"></i> Jardinería / Greenskeeping</span>
+                                <div class="flex flex-wrap gap-1.5" id="suggested-greens-container"></div>
+                            </div>
+
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5"><i class="fa-solid fa-hammer text-emerald-500 mr-1"></i> Construcción y Maquinaria</span>
+                                <div class="flex flex-wrap gap-1.5" id="suggested-construction-container"></div>
+                            </div>
+
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5"><i class="fa-solid fa-handshake text-emerald-500 mr-1"></i> Aptitudes Físicas & Seguridad</span>
+                                <div class="flex flex-wrap gap-1.5" id="suggested-qualities-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CERTIFICACIONES -->
+                    <div class="space-y-4 pt-4 border-t border-slate-800">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-500"></i> Certificaciones & Credenciales
+                        </h3>
+
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Tus Certificaciones</span>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 min-h-[50px] flex flex-wrap gap-2 mb-3" id="active-certs-container"></div>
+                            
+                            <div class="flex gap-2">
+                                <input type="text" id="manual-cert-input" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" placeholder="Ej: Licencia Liviana, Certificación OSHA...">
+                                <button onclick="addManualCert()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex-shrink-0">
+                                    <i class="fa-solid fa-plus"></i> Añadir
+                                </button>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <span class="text-[10px] font-bold text-slate-500 block mb-1.5">Sugeridos recomendados:</span>
+                                <div class="flex flex-wrap gap-1.5" id="suggested-certs-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- IDIOMAS DE UN CLIC -->
+                        <div class="pt-4 border-t border-slate-850">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Dominio de Idioma</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="setLanguage('Español (Nativo), Inglés (Básico)')" class="bg-slate-950 hover:bg-slate-850 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
+                                    <div class="font-extrabold text-white">Inglés Básico</div>
+                                    <span class="text-[10px] text-slate-400">Español (Nativo), Inglés (Básico)</span>
+                                </button>
+                                <button onclick="setLanguage('Español (Nativo), Inglés (Conversacional)')" class="bg-slate-950 hover:bg-slate-850 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
+                                    <div class="font-extrabold text-white">Inglés Conversacional</div>
+                                    <span class="text-[10px] text-slate-400">Español (Nativo), Inglés (Conversacional)</span>
+                                </button>
+                            </div>
+                            <div class="mt-3">
+                                <input type="text" id="input-languages" oninput="updateCV()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500" placeholder="O introduce tu dominio personalizado...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guías para EE.UU. -->
+                <div id="section-usa-tips" class="tab-content hidden space-y-4">
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-amber-550/20 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">🇺🇸</span>
+                            <div>
+                                <h4 class="text-sm font-extrabold text-amber-400">Contrataciones Temporales en EE. UU.</h4>
+                                <p class="text-[10px] text-slate-400 uppercase tracking-wider">Cómo redactar tu CV para visados de trabajo</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs text-slate-300">
+                            <div class="flex gap-2.5 leading-relaxed">
+                                <i class="fa-solid fa-circle-info text-emerald-400 mt-1 flex-shrink-0"></i>
+                                <p><strong class="text-white">Norma ATS (Sistemas de Lectura de CV):</strong> Las agencias y consultores de empleo en EE. UU. utilizan software automático para procesar currículums. Las tablas, columnas complejas y fotos confunden este software. La plantilla **3 (ATS US Standard)** está libre de distractores y pasa con puntuación perfecta.</p>
+                            </div>
+                            <div class="flex gap-2.5 leading-relaxed">
+                                <i class="fa-solid fa-circle-info text-emerald-400 mt-1 flex-shrink-0"></i>
+                                <p><strong class="text-white">Ausencia de Fotografía y Edad:</strong> Evaluadores estadounidenses recomiendan omitir la fotografía y la edad para cumplir con estrictas políticas de antidiscriminación laboral. Puedes desactivar ambas con las casillas en la pestaña "Datos Personales".</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Selector de Plantilla Fijo (Abajo del Editor) -->
+            <div class="bg-slate-950 border-t border-slate-800 p-4 space-y-2">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selecciona la Plantilla (Cambia en vivo en el lienzo inferior):</p>
+                <div class="grid grid-cols-5 gap-1.5" id="template-selector"></div>
+            </div>
+        </section>
+
+        <!-- PREVIEW PANEL (Derecha) -->
+        <section class="lg:col-span-7 flex flex-col h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar bg-slate-950 p-2 rounded-2xl border border-slate-900 shadow-inner">
+            <div class="flex justify-between items-center px-4 py-2.5 bg-slate-900 border-b border-slate-800 rounded-t-xl no-print">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Vista Real del Documento PDF / Impreso
+                </span>
+                <span class="text-[10px] bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-full text-slate-400 uppercase tracking-widest font-semibold">Tamaño Carta / Letter</span>
+            </div>
+
+            <!-- Lienzo de impresión física -->
+            <div class="flex-1 p-4 md:p-8 flex justify-center items-start bg-slate-950 overflow-y-auto">
+                <div id="print-area" class="w-full max-w-[816px] bg-white text-slate-900 p-10 shadow-2xl rounded-lg min-h-[1056px] flex flex-col transition-all duration-300 border border-slate-200">
+                    <div id="resume-preview"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-xs text-slate-500 no-print">
+        <p>© 2026 Creador de Currículum Pro - Listo para alojar en GitHub Pages.</p>
+    </footer>
+
+    <!-- Lógica de Negocio y Estados -->
+    <script>
+        // Catálogo de Habilidades Sugeridas y equivalentes en Inglés
+        const SUGGESTED_SKILLS = {
+            greens: [
+                { es: "Cuidado de Césped", en: "Turf & Lawn Care" },
+                { es: "Poda de Precisión", en: "Precision Mowing" },
+                { es: "Aireación de Suelo", en: "Soil Aeration" },
+                { es: "Sistemas de Riego", en: "Irrigation Systems" },
+                { es: "Manejo de Motosierras", en: "Chainsaw Operation" },
+                { es: "Control de Malezas", en: "Weed & Pest Control" },
+                { es: "Horticultura Básica", en: "Basic Horticulture" },
+                { es: "Aplicación de Fertilizantes", en: "Fertilizer Application" }
+            ],
+            construction: [
+                { es: "Nivelación de Terrenos", en: "Soil Grading & Leveling" },
+                { es: "Mampostería Básica", en: "Basic Masonry & Concrete" },
+                { es: "Operación de Tractores", en: "Light Tractor Operation" },
+                { es: "Carpintería Básica", en: "Basic Carpentry" },
+                { es: "Herramientas Eléctricas", en: "Power Tools Operation" },
+                { es: "Mantenimiento Preventivo", en: "Preventive Engine Maintenance" }
+            ],
+            qualities: [
+                { es: "Alta Resistencia Física", en: "Heavy Physical Stamina" },
+                { es: "Puntualidad Rigurosa", en: "Extreme Reliability & Punctuality" },
+                { es: "Trabajo en Equipo", en: "Cross-Functional Teamwork" },
+                { es: "Enfoque en Seguridad", en: "Safety-First & OSHA Compliance" },
+                { es: "Resolución de Problemas", en: "On-Site Problem Solving" }
+            ]
+        };
+
+        const SUGGESTED_CERTS = [
+            { es: "Curso de Manejo de Agroquímicos", en: "Safe Handling of Agrochemicals" },
+            { es: "Prevención de Riesgos Laborales", en: "Occupational Risk & Safety Prevention" },
+            { es: "Licencia de Conducir Liviana", en: "Standard Driver's License" },
+            { es: "Licencia de Conducir Pesada", en: "Commercial Driver's License (CDL)" },
+            { es: "Certificación de Primeros Auxilios", en: "First Aid & CPR Certification" }
+        ];
+
+        // Datos en Español preestablecidos (Con formato Array compatible en habilidades)
+        const defaultSpanishData = {
+            name: "JUAN CARLOS FLORES",
+            title: "ESPECIALISTA EN MANTENIMIENTO DE ÁREAS VERDES / GREENSKEEPER",
+            phone: "+503 7123-4567",
+            email: "correo@ejemplo.com",
+            location: "San Salvador, El Salvador (Con disponibilidad de traslado)",
+            link: "linkedin.com/in/juan-carlos-greenskeeper",
+            age: "26 años",
+            photo: "", 
+            showPhoto: true,
+            showAge: true,
+            summary: "Profesional dinámico y trabajador con sólida experiencia en el mantenimiento de terrenos, cuidado de áreas verdes y construcción. Especializado en el manejo seguro de herramientas de paisajismo, poda de árboles pesados, control de césped y mantenimiento general de jardines de alta calidad. Capacidad comprobada para realizar tareas físicas exigentes al aire libre, resolver problemas en el sitio y asegurar que los campos e instalaciones cumplan con los más altos estándares de estética y seguridad.",
+            experience: [
+                {
+                    role: "Operario de Mantenimiento de Áreas Verdes y Paisajismo",
+                    company: "Finca Santa Elena S.A. de C.V.",
+                    dates: "2022 - Presente",
+                    details: "• Ejecución de trabajos integrales de corte, nivelación y cuidado estético del césped utilizando maquinaria especializada.\n• Poda preventiva y correctiva de árboles y arbustos de gran escala, garantizando la seguridad del entorno.\n• Aplicación de técnicas de riego y fertilización para el óptimo desarrollo de plantas ornamentales y vegetación.\n• Uso y mantenimiento preventivo de herramientas motorizadas (motosierras, desbrozadoras, cortacéspedes industriales)."
+                },
+                {
+                    role: "Trabajador de Construcción y Mantenimiento General",
+                    company: "Constructora e Ingeniería Salvadoreña S.A.",
+                    dates: "2019 - 2022",
+                    details: "• Preparación de terrenos, excavación, nivelación de suelos y soporte en obras estructurales y de mampostería.\n• Instalación de estructuras menores de madera y piedra para paisajismo urbano y residencial.\n• Manipulación segura de materiales pesados y herramientas eléctricas de construcción.\n• Colaboración en equipos multidisciplinarios bajo estrictas normas de seguridad ocupacional."
+                }
+            ],
+            education: [
+                {
+                    degree: "Educación Básica / Bachillerato General",
+                    institution: "Instituto Nacional de El Salvador",
+                    dates: "2018"
+                }
+            ],
+            skills: ["Cuidado de Césped", "Poda de Precisión", "Manejo de Motosierras", "Sistemas de Riego", "Nivelación de Terrenos", "Alta Resistencia Física", "Enfoque en Seguridad"],
+            certs: ["Curso de Manejo de Agroquímicos", "Prevención de Riesgos Laborales"],
+            languages: "Español (Nativo), Inglés (Básico)"
+        };
+
+        const defaultEnglishData = {
+            name: "JUAN CARLOS FLORES",
+            title: "GREENSKEEPER / LANDSCAPING & GROUNDS MAINTENANCE SPECIALIST",
+            phone: "+503 7123-4567",
+            email: "correo@ejemplo.com",
+            location: "San Salvador, El Salvador (Willing to relocate / Open to H-2B Visa Sponsorship)",
+            link: "linkedin.com/in/juan-carlos-greenskeeper",
+            age: "26 years old",
+            photo: "",
+            showPhoto: false, 
+            showAge: false, 
+            summary: "Dynamic and hardworking professional with solid experience in groundskeeping, lawn care, and light construction. Specialized in the safe operation of landscaping equipment, heavy-scale tree trimming, turf management, and premium grounds maintenance. Proven ability to perform physically demanding tasks outdoors, solve problems on-site, and ensure that lawns and facilities meet the highest aesthetic and safety standards.",
+            experience: [
+                {
+                    role: "Groundskeeping & Landscaping Crew Member",
+                    company: "Santa Elena Farms Corp.",
+                    dates: "2022 - Present",
+                    details: "• Performed comprehensive mowing, leveling, and aesthetic turf grooming using commercial specialized machinery.\n• Conducted preventive and corrective pruning of large trees and shrubs, securing the surrounding facilities.\n• Applied irrigation and fertilization programs to optimize health of ornamental plants and golf course turf.\n• Operated and performed basic preventive maintenance on power tools (chainsaws, brush cutters, industrial lawnmowers)."
+                },
+                {
+                    role: "Construction & General Maintenance Crew Member",
+                    company: "Salvadoran Engineering & Construction Corp.",
+                    dates: "2019 - 2022",
+                    details: "• Prepared grounds, executed excavation, soil grading, and assisted in structural masonry works.\n• Installed light wood and stone pathways for urban and residential landscape architectures.\n• Handled heavy materials and industrial electrical tools safely in challenging environments.\n• Collaborated with diverse work crews complying with strict health and OSHA-aligned safety rules."
+                }
+            ],
+            education: [
+                {
+                    degree: "High School Diploma / General Bachillerato",
+                    institution: "National High School of El Salvador",
+                    dates: "2018"
+                }
+            ],
+            skills: ["Turf & Lawn Care", "Precision Mowing", "Chainsaw Operation", "Irrigation Systems", "Soil Grading & Leveling", "Heavy Physical Stamina", "Safety-First & OSHA Compliance"],
+            certs: ["Safe Handling of Agrochemicals", "Occupational Risk & Safety Prevention"],
+            languages: "Spanish (Native), English (Basic)"
+        };
+
+        // Estado de la Aplicación y Lenguaje Activo
+        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v5')) || JSON.parse(JSON.stringify(defaultSpanishData));
+        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v5')) || 1;
+        let currentLanguage = localStorage.getItem('current_language_gh_v5') || 'es';
+
+        // Lista de 10 Plantillas Profesionales
+        const templates = [
+            { id: 1, name: "Senda Verde (Esmeralda)", desc: "Estilo ecológico ideal para áreas verdes y paisajismo." },
+            { id: 2, name: "Navy Corporativo", desc: "Clásico, elegante, con alta legibilidad corporativa." },
+            { id: 3, name: "ATS US Standard", desc: "Sin foto, minimalista. Especial para sistemas automatizados de EE. UU." },
+            { id: 4, name: "Minimalista Moderno", desc: "Diseño despejado con tipografía Serif premium." },
+            { id: 5, name: "Élite Oro Negro", desc: "Tonos grafito y detalles ámbar profesionales." },
+            { id: 6, name: "Columna Dividida", desc: "Barra lateral oscura con información técnica compacta." },
+            { id: 7, name: "Teal Creativo", desc: "Moderno con detalles estilizados y bordes curvos." },
+            { id: 8, name: "Piedra y Acero", desc: "Industrial, robusto con estilo monospace." },
+            { id: 9, name: "Compacto Una Página", desc: "Márgenes cerrados para trayectorias de alta densidad." },
+            { id: 10, name: "Terracota Cálido", desc: "Tonos tierra inspiradores y tipografía de vanguardia." }
+        ];
+
+        // Función auxiliar de traducción bidireccional para Habilidades y Certificaciones
+        function translateSkill(skill, targetLang) {
+            for (const cat in SUGGESTED_SKILLS) {
+                const found = SUGGESTED_SKILLS[cat].find(item => item.es === skill || item.en === skill);
+                if (found) {
+                    return targetLang === 'en' ? found.en : found.es;
+                }
+            }
+            return skill; // Retorna la habilidad original si fue escrita de forma manual
+        }
+
+        function translateCert(cert, targetLang) {
+            const found = SUGGESTED_CERTS.find(item => item.es === cert || item.en === cert);
+            if (found) {
+                return targetLang === 'en' ? found.en : found.es;
+            }
+            return cert;
+        }
+
+        // Función para enviar Toast flotante
+        function showToast(message, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl border text-xs font-bold transition-all duration-300 transform translate-y-2 opacity-0 ${
+                type === "success" ? 'bg-emerald-950 border-emerald-500/30 text-emerald-300' : 'bg-indigo-950 border-indigo-500/30 text-indigo-300'
+            }`;
+            toast.innerHTML = `
+                <i class="${type === 'success' ? 'fa-solid fa-circle-check text-emerald-400' : 'fa-solid fa-language text-indigo-400'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Modal de confirmación personalizado
+        function showConfirmModal(title, msg, onConfirm) {
+            const modal = document.getElementById('confirm-modal');
+            const titleEl = document.getElementById('confirm-title');
+            const msgEl = document.getElementById('confirm-message');
+            const cancelBtn = document.getElementById('confirm-cancel-btn');
+            const okBtn = document.getElementById('confirm-ok-btn');
+
+            titleEl.innerText = title;
+            msgEl.innerText = msg;
+            modal.classList.remove('hidden');
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                cancelBtn.onclick = null;
+                okBtn.onclick = null;
+            };
+
+            cancelBtn.onclick = () => { closeModal(); };
+            okBtn.onclick = () => { onConfirm(); closeModal(); };
+        }
+
+        // Cargar los Datos en el Editor e Inputs
+        function loadDataIntoInputs() {
+            document.getElementById('input-name').value = cvData.name || '';
+            document.getElementById('input-title').value = cvData.title || '';
+            document.getElementById('input-age').value = cvData.age || '';
+            document.getElementById('input-phone').value = cvData.phone || '';
+            document.getElementById('input-email').value = cvData.email || '';
+            document.getElementById('input-location').value = cvData.location || '';
+            document.getElementById('input-link').value = cvData.link || '';
+            document.getElementById('input-summary').value = cvData.summary || '';
+            document.getElementById('input-languages').value = cvData.languages || '';
+            document.getElementById('toggle-photo').checked = cvData.showPhoto;
+            document.getElementById('toggle-age').checked = cvData.showAge;
+            
+            const preview = document.getElementById('preview-photo');
+            const placeholder = document.getElementById('photo-placeholder');
+            if (cvData.photo) {
+                preview.src = cvData.photo;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            } else {
+                preview.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+
+            renderExperienceEditor();
+            renderEducationEditor();
+            renderActiveSkills();
+            renderActiveCerts();
+            renderSuggestions();
+            renderSelectedTemplate();
+        }
+
+        // RENDERIZADO DE HABILIDADES ACTIVAS
+        function renderActiveSkills() {
+            const container = document.getElementById('active-skills-container');
+            container.innerHTML = '';
+            
+            if (!cvData.skills || cvData.skills.length === 0) {
+                container.innerHTML = `<span class="text-xs text-slate-500 italic">No has seleccionado habilidades todavía.</span>`;
+                return;
+            }
+
+            cvData.skills.forEach((skill, index) => {
+                container.innerHTML += `
+                    <span class="bg-slate-900 text-slate-200 text-xs font-semibold px-2.5 py-1 rounded-lg border border-slate-850 flex items-center gap-1.5 hover:border-rose-500/50 hover:text-rose-400 transition cursor-pointer select-none" onclick="removeSkill(${index})">
+                        ${skill}
+                        <i class="fa-solid fa-xmark text-[10px]"></i>
+                    </span>
+                `;
+            });
+        }
+
+        function renderActiveCerts() {
+            const container = document.getElementById('active-certs-container');
+            container.innerHTML = '';
+
+            if (!cvData.certs || cvData.certs.length === 0) {
+                container.innerHTML = `<span class="text-xs text-slate-500 italic">No has añadido certificaciones.</span>`;
+                return;
+            }
+
+            cvData.certs.forEach((cert, index) => {
+                container.innerHTML += `
+                    <span class="bg-slate-900 text-slate-200 text-xs font-semibold px-2.5 py-1 rounded-lg border border-slate-850 flex items-center gap-1.5 hover:border-rose-500/50 hover:text-rose-400 transition cursor-pointer select-none" onclick="removeCert(${index})">
+                        ${cert}
+                        <i class="fa-solid fa-xmark text-[10px]"></i>
+                    </span>
+                `;
+            });
+        }
+
+        // RENDERIZADO DE RECOMENDACIONES DE UN CLIC (Traduce visualmente las sugerencias)
+        function renderSuggestions() {
+            const renderCategory = (categoryKey, containerId) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                SUGGESTED_SKILLS[categoryKey].forEach(item => {
+                    // Verificamos si la habilidad (en cualquiera de sus dos formas) ya está en el CV
+                    const isSelected = cvData.skills.includes(item.es) || cvData.skills.includes(item.en);
+                    const displayName = currentLanguage === 'en' ? item.en : item.es;
+                    
+                    if (isSelected) {
+                        container.innerHTML += `
+                            <button disabled class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-950 text-slate-700 border border-slate-900 cursor-not-allowed opacity-40">
+                                ✓ ${displayName}
+                            </button>
+                        `;
+                    } else {
+                        container.innerHTML += `
+                            <button onclick="addSuggestedSkill('${item.es}', '${item.en}')" 
+                                class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-750 transition duration-150">
+                                + ${displayName}
+                            </button>
+                        `;
+                    }
+                });
+            };
+
+            renderCategory('greens', 'suggested-greens-container');
+            renderCategory('construction', 'suggested-construction-container');
+            renderCategory('qualities', 'suggested-qualities-container');
+
+            // Renderizar Certificaciones Sugeridas
+            const certsContainer = document.getElementById('suggested-certs-container');
+            certsContainer.innerHTML = '';
+            SUGGESTED_CERTS.forEach(item => {
+                const isSelected = cvData.certs.includes(item.es) || cvData.certs.includes(item.en);
+                const displayName = currentLanguage === 'en' ? item.en : item.es;
+                
+                if (isSelected) {
+                    certsContainer.innerHTML += `
+                        <button disabled class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-950 text-slate-700 border border-slate-900 cursor-not-allowed opacity-40">
+                            ✓ ${displayName}
+                        </button>
+                    `;
+                } else {
+                    certsContainer.innerHTML += `
+                        <button onclick="addSuggestedCert('${item.es}', '${item.en}')" 
+                            class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-750 transition duration-150">
+                            + ${displayName}
+                        </button>
+                    `;
+                }
+            });
+        }
+
+        // AGREGAR Y ELIMINAR HABILIDADES
+        function addSuggestedSkill(esName, enName) {
+            // El idioma se determina estrictamente por el estado activo "currentLanguage"
+            const skillToAdd = currentLanguage === 'en' ? enName : esName;
+            
+            if (!cvData.skills.includes(skillToAdd)) {
+                cvData.skills.push(skillToAdd);
+                saveState();
+                renderActiveSkills();
+                renderSuggestions();
+                renderSelectedTemplate();
+                showToast(`Habilidad "${skillToAdd}" añadida`);
+            }
+        }
+
+        function addManualSkill() {
+            const input = document.getElementById('manual-skill-input');
+            const val = input.value.trim();
+            if (val) {
+                if (!cvData.skills.includes(val)) {
+                    cvData.skills.push(val);
+                    input.value = '';
+                    saveState();
+                    renderActiveSkills();
+                    renderSuggestions();
+                    renderSelectedTemplate();
+                    showToast(`Añadido: ${val}`);
+                }
+            }
+        }
+
+        function removeSkill(index) {
+            const removed = cvData.skills[index];
+            cvData.skills.splice(index, 1);
+            saveState();
+            renderActiveSkills();
+            renderSuggestions();
+            renderSelectedTemplate();
+            showToast(`Eliminado: ${removed}`);
+        }
+
+        function addSuggestedCert(esName, enName) {
+            const certToAdd = currentLanguage === 'en' ? enName : esName;
+            
+            if (!cvData.certs.includes(certToAdd)) {
+                cvData.certs.push(certToAdd);
+                saveState();
+                renderActiveCerts();
+                renderSuggestions();
+                renderSelectedTemplate();
+                showToast(`Certificación añadida`);
+            }
+        }
+
+        function addManualCert() {
+            const input = document.getElementById('manual-cert-input');
+            const val = input.value.trim();
+            if (val) {
+                if (!cvData.certs.includes(val)) {
+                    cvData.certs.push(val);
+                    input.value = '';
+                    saveState();
+                    renderActiveCerts();
+                    renderSuggestions();
+                    renderSelectedTemplate();
+                    showToast(`Certificación añadida`);
+                }
+            }
+        }
+
+        function removeCert(index) {
+            cvData.certs.splice(index, 1);
+            saveState();
+            renderActiveCerts();
+            renderSuggestions();
+            renderSelectedTemplate();
+            showToast("Certificación eliminada");
+        }
+
+        function setLanguage(langString) {
+            cvData.languages = langString;
+            document.getElementById('input-languages').value = langString;
+            updateCV();
+            showToast("Idioma configurado");
+        }
+
+        // EDITORES DINÁMICOS DE SECCIONES (Educación y Experiencia)
+        function renderExperienceEditor() {
+            const list = document.getElementById('experience-list');
+            list.innerHTML = '';
+            (cvData.experience || []).forEach((exp, index) => {
+                list.innerHTML += `
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 relative">
+                        <button onclick="removeExperience(${index})" class="absolute top-3 right-3 text-rose-500 hover:text-rose-400 transition" title="Eliminar Cargo">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Cargo u Oficio</label>
+                            <input type="text" value="${exp.role}" oninput="updateExpField(${index}, 'role', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Empresa / Finca / Contratista</label>
+                            <input type="text" value="${exp.company}" oninput="updateExpField(${index}, 'company', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Rango de Fechas</label>
+                            <input type="text" value="${exp.dates}" oninput="updateExpField(${index}, 'dates', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Detalles de Tareas (Salto de línea para viñetas)</label>
+                            <textarea rows="3" oninput="updateExpField(${index}, 'details', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1 custom-scrollbar">${exp.details}</textarea>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderEducationEditor() {
+            const list = document.getElementById('education-list');
+            list.innerHTML = '';
+            (cvData.education || []).forEach((edu, index) => {
+                list.innerHTML += `
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 relative">
+                        <button onclick="removeEducation(${index})" class="absolute top-3 right-3 text-rose-500 hover:text-rose-400 transition" title="Eliminar Registro">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Título / Certificado</label>
+                            <input type="text" value="${edu.degree}" oninput="updateEduField(${index}, 'degree', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Institución</label>
+                            <input type="text" value="${edu.institution}" oninput="updateEduField(${index}, 'institution', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Año de Egreso</label>
+                            <input type="text" value="${edu.dates}" oninput="updateEduField(${index}, 'dates', this.value)" class="w-full bg-slate-900 border border-slate-850 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 mt-1">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // TRADUCCIONES CONTEXTUALES E INTELIGENTES (Bidireccional exacto)
+        function translateToEnglish() {
+            currentLanguage = 'en';
+
+            // Traducir las habilidades y certificaciones activas
+            cvData.skills = cvData.skills.map(skill => translateSkill(skill, 'en'));
+            cvData.certs = cvData.certs.map(cert => translateCert(cert, 'en'));
+
+            // Swap de datos del perfil y secciones si corresponden a la plantilla por defecto
+            if (cvData.location === defaultSpanishData.location || cvData.location === "") {
+                cvData.location = defaultEnglishData.location;
+            }
+            if (cvData.title === defaultSpanishData.title) {
+                cvData.title = defaultEnglishData.title;
+            }
+            if (cvData.age === defaultSpanishData.age) {
+                cvData.age = defaultEnglishData.age;
+            }
+            if (cvData.summary === defaultSpanishData.summary) {
+                cvData.summary = defaultEnglishData.summary;
+            }
+            if (cvData.languages === defaultSpanishData.languages) {
+                cvData.languages = defaultEnglishData.languages;
+            }
+
+            // Traducir cargos de experiencia predeterminados
+            cvData.experience.forEach((exp, idx) => {
+                const defaultES = defaultSpanishData.experience[idx];
+                const defaultEN = defaultEnglishData.experience[idx];
+                if (defaultES && defaultEN) {
+                    if (exp.role === defaultES.role) exp.role = defaultEN.role;
+                    if (exp.company === defaultES.company) exp.company = defaultEN.company;
+                    if (exp.dates === defaultES.dates) exp.dates = defaultEN.dates;
+                    if (exp.details === defaultES.details) exp.details = defaultEN.details;
+                }
+            });
+
+            // Traducir educación predeterminada
+            cvData.education.forEach((edu, idx) => {
+                const defaultES = defaultSpanishData.education[idx];
+                const defaultEN = defaultEnglishData.education[idx];
+                if (defaultES && defaultEN) {
+                    if (edu.degree === defaultES.degree) edu.degree = defaultEN.degree;
+                    if (edu.institution === defaultES.institution) edu.institution = defaultEN.institution;
+                    if (edu.dates === defaultES.dates) edu.dates = defaultEN.dates;
+                }
+            });
+
+            // Ocultar foto y edad según estándares rigurosos de contratación en EE. UU.
+            cvData.showPhoto = false;
+            cvData.showAge = false;
+
+            activeTemplateId = 3; // Plantilla ATS unificada por defecto
+            updateTemplateSelectorUI();
+            saveState();
+            loadDataIntoInputs();
+            showToast("Traducido al inglés. Interfaz adaptada a postulaciones de EE. UU.", "info");
+        }
+
+        function restoreSpanish() {
+            currentLanguage = 'es';
+
+            // Traducir las habilidades y certificaciones activas de vuelta a español
+            cvData.skills = cvData.skills.map(skill => translateSkill(skill, 'es'));
+            cvData.certs = cvData.certs.map(cert => translateCert(cert, 'es'));
+
+            // Restaurar datos si corresponden a las plantillas por defecto en inglés
+            if (cvData.location === defaultEnglishData.location || cvData.location === "") {
+                cvData.location = defaultSpanishData.location;
+            }
+            if (cvData.title === defaultEnglishData.title) {
+                cvData.title = defaultSpanishData.title;
+            }
+            if (cvData.age === defaultEnglishData.age) {
+                cvData.age = defaultSpanishData.age;
+            }
+            if (cvData.summary === defaultEnglishData.summary) {
+                cvData.summary = defaultSpanishData.summary;
+            }
+            if (cvData.languages === defaultEnglishData.languages) {
+                cvData.languages = defaultSpanishData.languages;
+            }
+
+            // Destraducir experiencia
+            cvData.experience.forEach((exp, idx) => {
+                const defaultES = defaultSpanishData.experience[idx];
+                const defaultEN = defaultEnglishData.experience[idx];
+                if (defaultES && defaultEN) {
+                    if (exp.role === defaultEN.role) exp.role = defaultES.role;
+                    if (exp.company === defaultEN.company) exp.company = defaultES.company;
+                    if (exp.dates === defaultEN.dates) exp.dates = defaultES.dates;
+                    if (exp.details === defaultEN.details) exp.details = defaultES.details;
+                }
+            });
+
+            // Destraducir educación
+            cvData.education.forEach((edu, idx) => {
+                const defaultES = defaultSpanishData.education[idx];
+                const defaultEN = defaultEnglishData.education[idx];
+                if (defaultES && defaultEN) {
+                    if (edu.degree === defaultEN.degree) edu.degree = defaultES.degree;
+                    if (edu.institution === defaultEN.institution) edu.institution = defaultES.institution;
+                    if (edu.dates === defaultEN.dates) edu.dates = defaultES.dates;
+                }
+            });
+
+            // Mostrar foto y edad para el mercado latinoamericano
+            cvData.showPhoto = true;
+            cvData.showAge = true;
+
+            activeTemplateId = 1;
+            updateTemplateSelectorUI();
+            saveState();
+            loadDataIntoInputs();
+            showToast("Restaurado a Español original.", "info");
+        }
+
+        // PERSISTENCIA DE ESTADO Y GUARDADO LOCAL
+        function saveState() {
+            localStorage.setItem('saved_cv_data_gh_v5', JSON.stringify(cvData));
+            localStorage.setItem('active_template_id_gh_v5', activeTemplateId);
+            localStorage.setItem('current_language_gh_v5', currentLanguage);
+        }
+
+        function updateCV() {
+            cvData.name = document.getElementById('input-name').value;
+            cvData.title = document.getElementById('input-title').value;
+            cvData.age = document.getElementById('input-age').value;
+            cvData.phone = document.getElementById('input-phone').value;
+            cvData.email = document.getElementById('input-email').value;
+            cvData.location = document.getElementById('input-location').value;
+            cvData.link = document.getElementById('input-link').value;
+            cvData.summary = document.getElementById('input-summary').value;
+            cvData.languages = document.getElementById('input-languages').value;
+            
+            saveState();
+            renderSelectedTemplate();
+        }
+
+        function updateExpField(index, field, value) {
+            cvData.experience[index][field] = value;
+            saveState();
+            renderSelectedTemplate();
+        }
+
+        function updateEduField(index, field, value) {
+            cvData.education[index][field] = value;
+            saveState();
+            renderSelectedTemplate();
+        }
+
+        function addExperience() {
+            cvData.experience.push({
+                role: currentLanguage === 'en' ? "New Job Position" : "Nuevo Cargo / Puesto",
+                company: "Finca / Empresa",
+                dates: "2023 - Present",
+                details: "• Detalles..."
+            });
+            renderExperienceEditor();
+            updateCV();
+            showToast("Trabajo añadido");
+        }
+
+        function removeExperience(index) {
+            cvData.experience.splice(index, 1);
+            renderExperienceEditor();
+            updateCV();
+            showToast("Cargo de trabajo removido");
+        }
+
+        function addEducation() {
+            cvData.education.push({
+                degree: currentLanguage === 'en' ? "New Course or Certificate" : "Nueva Formación o Certificado",
+                institution: "Institución",
+                dates: "2023"
+            });
+            renderEducationEditor();
+            updateCV();
+            showToast("Formación añadida");
+        }
+
+        function removeEducation(index) {
+            cvData.education.splice(index, 1);
+            renderEducationEditor();
+            updateCV();
+            showToast("Estudio removido");
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    cvData.photo = e.target.result;
+                    const preview = document.getElementById('preview-photo');
+                    const placeholder = document.getElementById('photo-placeholder');
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    
+                    updateCV();
+                    showToast("Fotografía añadida");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function togglePhotoVisibility() {
+            cvData.showPhoto = document.getElementById('toggle-photo').checked;
+            updateCV();
+        }
+
+        function toggleAgeVisibility() {
+            cvData.showAge = document.getElementById('toggle-age').checked;
+            updateCV();
+        }
+
+        function requestResetToDefaults() {
+            showConfirmModal(
+                "¿Restablecer datos?",
+                "Esta acción borrará tus ediciones y volverá a cargar los datos de demostración del Salvador para Greenskeeper.",
+                () => {
+                    localStorage.removeItem('saved_cv_data_gh_v5');
+                    cvData = JSON.parse(JSON.stringify(defaultSpanishData));
+                    currentLanguage = 'es';
+                    activeTemplateId = 1;
+                    updateTemplateSelectorUI();
+                    loadDataIntoInputs();
+                    showToast("Datos restaurados de demostración");
+                }
+            );
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'text-emerald-400');
+                btn.classList.add('border-transparent', 'text-slate-400');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('border-transparent', 'text-slate-400');
+            document.getElementById(`tab-${tabId}`).classList.add('border-emerald-500', 'text-emerald-400');
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+        }
+
+        function renderTemplateSelector() {
+            const selector = document.getElementById('template-selector');
+            selector.innerHTML = '';
+            templates.forEach(t => {
+                const isActive = t.id === activeTemplateId;
+                selector.innerHTML += `
+                    <button onclick="selectTemplate(${t.id})" 
+                        title="${t.name}: ${t.desc}"
+                        class="h-9 text-xs font-black rounded-lg border transition flex items-center justify-center ${
+                            isActive 
+                            ? 'bg-emerald-500 border-emerald-400 text-slate-950 shadow-md shadow-emerald-500/20' 
+                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                        }">
+                        ${t.id}
+                    </button>
+                `;
+            });
+        }
+
+        function updateTemplateSelectorUI() {
+            renderTemplateSelector();
+        }
+
+        function selectTemplate(id) {
+            activeTemplateId = id;
+            updateTemplateSelectorUI();
+            saveState();
+            renderSelectedTemplate();
+            showToast(`Estilo de plantilla ${id} cargado`);
+        }
+
+        // MOTOR DE RENDERIZADO DE LAS 10 PLANTILLAS
+        function renderSelectedTemplate() {
+            const container = document.getElementById('resume-preview');
+            let html = '';
+
+            const formatDetails = (text) => {
+                if (!text) return '';
+                return text.split('\n')
+                           .map(line => line.trim())
+                           .filter(line => line.length > 0)
+                           .map(line => {
+                               let content = line;
+                               if (line.startsWith('•') || line.startsWith('-')) {
+                                   content = line.substring(1).trim();
+                               }
+                               return `<li class="mb-1 leading-relaxed text-justify">${content}</li>`;
+                           })
+                           .join('');
+            };
+
+            const renderBadges = (arr, badgeClass) => {
+                if (!arr || !Array.isArray(arr) || arr.length === 0) return '';
+                return arr.map(item => `<span class="${badgeClass}">${item}</span>`).join(' ');
+            };
+
+            const photoHtml = (cvData.showPhoto && cvData.photo) 
+                ? `<img src="${cvData.photo}" class="w-24 h-24 rounded-full object-cover border-2 border-slate-300 shadow-sm flex-shrink-0">` 
+                : '';
+
+            const photoHtmlSquare = (cvData.showPhoto && cvData.photo) 
+                ? `<img src="${cvData.photo}" class="w-24 h-28 rounded-lg object-cover border border-slate-300 shadow-sm flex-shrink-0">` 
+                : '';
+
+            const labelAge = currentLanguage === 'en' ? 'Age:' : 'Edad:';
+
+            const ageTag = (cvData.showAge && cvData.age) 
+                ? `<span><i class="fa-solid fa-cake-candles text-slate-400 mr-1.5"></i> ${cvData.age}</span>` 
+                : '';
+
+            const ageTagEmerald = (cvData.showAge && cvData.age) 
+                ? `<span><i class="fa-solid fa-cake-candles text-emerald-600 mr-1.5"></i> ${cvData.age}</span>` 
+                : '';
+
+            const ageLabelStandard = (cvData.showAge && cvData.age) 
+                ? `| <span>${labelAge} ${cvData.age}</span>` 
+                : '';
+
+            switch(activeTemplateId) {
+                case 1: // Senda Verde (Esmeralda)
+                    html = `
+                        <div class="font-inter text-slate-800 text-xs animate-fadeIn">
+                            <div class="flex items-center justify-between border-b-4 border-emerald-600 pb-4 mb-5 gap-4">
+                                <div class="space-y-1">
+                                    <h2 class="text-2xl font-black text-emerald-850 tracking-tight">${cvData.name}</h2>
+                                    <p class="text-[10px] font-bold tracking-widest text-emerald-600 uppercase">${cvData.title}</p>
+                                    <div class="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-slate-500 mt-2">
+                                        <span><i class="fa-solid fa-phone text-emerald-600 mr-1"></i> ${cvData.phone}</span>
+                                        <span><i class="fa-solid fa-envelope text-emerald-600 mr-1"></i> ${cvData.email}</span>
+                                        <span><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> ${cvData.location}</span>
+                                        ${ageTagEmerald}
+                                        ${cvData.link ? `<span><i class="fa-solid fa-link text-emerald-600 mr-1"></i> ${cvData.link}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${photoHtml}
+                            </div>
+
+                            <div class="mb-4">
+                                <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-1.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Professional Summary' : 'Perfil Profesional'}</h3>
+                                <p class="text-[11px] text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-5">
+                                <div class="col-span-2 space-y-4">
+                                    <div>
+                                        <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Employment History' : 'Experiencia Laboral'}</h3>
+                                        <div class="space-y-3">
+                                            ${(cvData.experience || []).map(exp => `
+                                                <div class="avoid-break">
+                                                    <div class="flex justify-between items-baseline mb-0.5">
+                                                        <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                        <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
+                                                    </div>
+                                                    <p class="text-[10px] font-medium text-slate-400 mb-1">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-[10px] text-slate-600 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-1 space-y-4">
+                                    <div>
+                                        <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-emerald-50 text-emerald-800 rounded px-1.5 py-0.5 text-[9px] font-medium border border-emerald-100/50")}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                        <div class="space-y-2">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                    <p class="text-[9px] text-slate-500">${edu.institution}</p>
+                                                    <span class="text-[9px] font-semibold text-slate-400">${edu.dates}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    ${cvData.certs && cvData.certs.length > 0 ? `
+                                        <div>
+                                            <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Certifications' : 'Certificaciones'}</h3>
+                                            <div class="flex flex-wrap gap-1">
+                                                ${renderBadges(cvData.certs, "bg-slate-100 text-slate-700 rounded px-1.5 py-0.5 text-[9px]")}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+
+                                    <div>
+                                        <h3 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2.5 border-b border-emerald-100 pb-1">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                        <p class="text-[10px] text-slate-600 font-medium">${cvData.languages}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 2: // Navy Corporativo
+                    html = `
+                        <div class="font-outfit text-slate-800 text-xs">
+                            <div class="bg-slate-900 text-white p-6 -mx-10 -mt-10 mb-5 flex justify-between items-center gap-4 animate-fadeIn">
+                                <div class="space-y-1">
+                                    <h2 class="text-2xl font-bold tracking-tight text-white">${cvData.name}</h2>
+                                    <p class="text-[11px] font-light text-slate-300 tracking-wider uppercase">${cvData.title}</p>
+                                    <div class="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-slate-300 mt-2">
+                                        <span><i class="fa-solid fa-phone mr-1"></i> ${cvData.phone}</span>
+                                        <span><i class="fa-solid fa-envelope mr-1"></i> ${cvData.email}</span>
+                                        <span><i class="fa-solid fa-location-dot mr-1"></i> ${cvData.location}</span>
+                                        ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles mr-1 text-slate-300"></i> ${cvData.age}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${photoHtml}
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1.5 border-l-4 border-slate-900 pl-2">${currentLanguage === 'en' ? 'Professional Profile' : 'Perfil Profesional'}</h3>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed text-justify">${cvData.summary}</p>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-5">
+                                    <div class="col-span-2 space-y-4">
+                                        <div>
+                                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5 border-l-4 border-slate-900 pl-2">${currentLanguage === 'en' ? 'Work History' : 'Experiencia'}</h3>
+                                            <div class="space-y-3">
+                                                ${(cvData.experience || []).map(exp => `
+                                                    <div class="border-l border-slate-200 pl-3 ml-1 avoid-break">
+                                                        <div class="flex justify-between items-baseline">
+                                                            <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                            <span class="text-[9px] font-bold text-slate-500">${exp.dates}</span>
+                                                        </div>
+                                                        <p class="text-[10px] font-bold text-slate-400 mb-1">${exp.company}</p>
+                                                        <ul class="list-disc pl-4 text-[10px] text-slate-655 space-y-0.5">
+                                                            ${formatDetails(exp.details)}
+                                                        </ul>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-1 space-y-4">
+                                        <div>
+                                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5 border-l-4 border-slate-900 pl-2">${currentLanguage === 'en' ? 'Skills' : 'Competencias'}</h3>
+                                            <div class="flex flex-col gap-1">
+                                                ${renderBadges(cvData.skills, "bg-slate-100 text-slate-800 rounded px-2 py-0.5 text-[9px] border-r-2 border-slate-500")}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5 border-l-4 border-slate-900 pl-2">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                            <div class="space-y-2">
+                                                ${(cvData.education || []).map(edu => `
+                                                    <div>
+                                                        <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                        <p class="text-[9px] text-slate-500">${edu.institution}</p>
+                                                        <span class="text-[9px] font-medium text-slate-400">${edu.dates}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2.5 border-l-4 border-slate-900 pl-2">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                            <p class="text-[10px] text-slate-600 font-medium">${cvData.languages}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 3: // ATS US Standard
+                    html = `
+                        <div class="font-inter text-black max-w-[720px] mx-auto text-xs animate-fadeIn" style="line-height: 1.35;">
+                            <div class="text-center space-y-1 mb-4 border-b border-black pb-2">
+                                <h2 class="text-lg font-black text-black uppercase tracking-wide">${cvData.name}</h2>
+                                <p class="text-[10px] font-bold text-slate-700 tracking-wider uppercase">${cvData.title}</p>
+                                <div class="flex justify-center flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-slate-600">
+                                    <span>${cvData.phone}</span> |
+                                    <span>${cvData.email}</span> |
+                                    <span>${cvData.location}</span>
+                                    ${ageLabelStandard}
+                                    ${cvData.link ? `| <span>${cvData.link}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 mb-1.5">${currentLanguage === 'en' ? 'Professional Summary' : 'Perfil Profesional'}</h3>
+                                    <p class="text-justify text-slate-800 leading-normal">${cvData.summary}</p>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 mb-2">${currentLanguage === 'en' ? 'Work History' : 'Experiencia de Trabajo'}</h3>
+                                    <div class="space-y-3">
+                                        ${(cvData.experience || []).map(exp => `
+                                            <div class="avoid-break">
+                                                <div class="flex justify-between items-baseline font-bold text-black">
+                                                    <span>${exp.role}</span>
+                                                    <span>${exp.dates}</span>
+                                                </div>
+                                                <div class="flex justify-between items-baseline font-semibold text-slate-600 italic mb-1">
+                                                    <span>${exp.company}</span>
+                                                </div>
+                                                <ul class="list-disc pl-4 text-slate-800 space-y-0.5">
+                                                    ${formatDetails(exp.details)}
+                                                </ul>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 mb-2">${currentLanguage === 'en' ? 'Education & Training' : 'Formación y Cursos'}</h3>
+                                    <div class="space-y-1.5">
+                                        ${(cvData.education || []).map(edu => `
+                                            <div class="flex justify-between items-baseline avoid-break text-black">
+                                                <div>
+                                                    <span class="font-bold">${edu.degree}</span> - 
+                                                    <span class="text-slate-600">${edu.institution}</span>
+                                                </div>
+                                                <span class="font-bold text-slate-600">${edu.dates}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-0.5 mb-1.5">${currentLanguage === 'en' ? 'Skills & Accreditations' : 'Habilidades y Credenciales'}</h3>
+                                    <div class="space-y-1 text-slate-800">
+                                        <p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Skills:' : 'Habilidades:'}</strong> ${cvData.skills ? cvData.skills.join(', ') : ''}</p>
+                                        ${cvData.certs && cvData.certs.length > 0 ? `<p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Certifications:' : 'Certificaciones:'}</strong> ${cvData.certs.join(', ')}</p>` : ''}
+                                        <p><strong class="font-bold text-black">${currentLanguage === 'en' ? 'Languages:' : 'Idiomas:'}</strong> ${cvData.languages}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 4: // Minimalista Moderno (Serif Lora)
+                    html = `
+                        <div class="font-lora text-slate-800 text-xs animate-fadeIn">
+                            <div class="text-center space-y-2 mb-6">
+                                <h2 class="text-2xl font-light tracking-wide text-slate-900">${cvData.name}</h2>
+                                <p class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">${cvData.title}</p>
+                                <div class="flex justify-center flex-wrap gap-x-4 gap-y-1 text-[10px] text-slate-500 pt-1.5 border-t border-slate-100 max-w-md mx-auto">
+                                    <span>${cvData.phone}</span>
+                                    <span>•</span>
+                                    <span>${cvData.email}</span>
+                                    <span>•</span>
+                                    <span>${cvData.location}</span>
+                                    ${cvData.showAge && cvData.age ? `<span>•</span> <span>${cvData.age}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">${currentLanguage === 'en' ? 'Summary' : 'Acerca de mí'}</h3>
+                                    <p class="text-slate-600 leading-relaxed text-justify">${cvData.summary}</p>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-2">${currentLanguage === 'en' ? 'Professional Record' : 'Trayectoria Profesional'}</h3>
+                                    <div class="space-y-3.5">
+                                        ${(cvData.experience || []).map(exp => `
+                                            <div class="grid grid-cols-4 gap-3 avoid-break">
+                                                <div class="col-span-1 text-right">
+                                                    <span class="text-[10px] font-semibold text-slate-400">${exp.dates}</span>
+                                                </div>
+                                                <div class="col-span-3">
+                                                    <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                    <p class="text-[9px] text-slate-400 italic mb-1.5">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-[10px] text-slate-655 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-5 pt-3 border-t border-slate-100">
+                                    <div>
+                                        <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                        <div class="space-y-2">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                    <p class="text-[9px] text-slate-550">${edu.institution}</p>
+                                                    <span class="text-[9px] text-slate-400">${edu.dates}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">${currentLanguage === 'en' ? 'Core Skills' : 'Competencias'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-slate-50 text-slate-700 rounded px-1.5 py-0.5 text-[9px] border border-slate-200/50")}
+                                        </div>
+                                        <div class="mt-3">
+                                            <h4 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h4>
+                                            <p class="text-[10px] text-slate-650">${cvData.languages}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 5: // Élite Oro Negro
+                    html = `
+                        <div class="font-outfit text-slate-850 text-xs animate-fadeIn">
+                            <div class="flex justify-between items-start border-b-2 border-amber-500 pb-4 mb-4 gap-4">
+                                <div class="space-y-1.5">
+                                    <h2 class="text-2xl font-black text-slate-900 tracking-tight">${cvData.name}</h2>
+                                    <p class="text-[10px] font-bold tracking-widest text-amber-600 uppercase">${cvData.title}</p>
+                                    <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-500 pt-1.5">
+                                        <span><i class="fa-solid fa-phone mr-1.5 text-slate-400"></i> ${cvData.phone}</span>
+                                        <span><i class="fa-solid fa-envelope mr-1.5 text-slate-400"></i> ${cvData.email}</span>
+                                        <span><i class="fa-solid fa-location-dot mr-1.5 text-slate-400"></i> ${cvData.location}</span>
+                                        ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles mr-1.5 text-slate-400"></i> ${cvData.age}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${photoHtmlSquare}
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-1.5">${currentLanguage === 'en' ? 'Professional Summary' : 'Resumen de Carrera'}</h3>
+                                    <p class="text-slate-655 leading-relaxed text-justify">${cvData.summary}</p>
+                                </div>
+
+                                <div class="grid grid-cols-12 gap-5">
+                                    <div class="col-span-8 space-y-4">
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Work Record' : 'Historial Profesional'}</h3>
+                                            <div class="space-y-3">
+                                                ${(cvData.experience || []).map(exp => `
+                                                    <div class="avoid-break">
+                                                        <div class="flex justify-between items-baseline mb-0.5">
+                                                            <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                            <span class="text-[9px] font-bold text-amber-600">${exp.dates}</span>
+                                                        </div>
+                                                        <p class="text-[9px] font-medium text-slate-450 mb-1.5">${exp.company}</p>
+                                                        <ul class="list-disc pl-4 text-slate-655 space-y-0.5">
+                                                            ${formatDetails(exp.details)}
+                                                        </ul>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-4 space-y-4">
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Expertise' : 'Especialidades'}</h3>
+                                            <div class="flex flex-col gap-1">
+                                                ${renderBadges(cvData.skills, "bg-slate-50 text-slate-800 rounded px-2 py-0.5 text-[9px] border-l-2 border-amber-500")}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
+                                            <div class="space-y-2">
+                                                ${(cvData.education || []).map(edu => `
+                                                    <div>
+                                                        <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                        <p class="text-[9px] text-slate-550">${edu.institution}</p>
+                                                        <span class="text-[9px] font-medium text-slate-455">${edu.dates}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                            <p class="text-[10px] text-slate-650">${cvData.languages}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 6: // Columna Dividida
+                    html = `
+                        <div class="font-inter text-slate-800 flex h-full -mx-10 -my-10 text-xs animate-fadeIn">
+                            <div class="w-1/3 bg-slate-900 text-white p-6 space-y-5 min-h-[1056px] flex flex-col justify-between">
+                                <div class="space-y-5">
+                                    <div class="text-center">
+                                        ${cvData.showPhoto && cvData.photo ? `<img src="${cvData.photo}" class="w-20 h-20 rounded-full mx-auto object-cover border-2 border-emerald-500 mb-3 shadow">` : ''}
+                                        <h2 class="text-sm font-bold tracking-tight text-white">${cvData.name}</h2>
+                                        <p class="text-[9px] text-emerald-400 uppercase tracking-wider font-semibold mt-1">${cvData.title}</p>
+                                    </div>
+
+                                    <div class="space-y-2 pt-3 border-t border-slate-800">
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Contact' : 'Contacto'}</h3>
+                                        <div class="space-y-1.5 text-[9px] text-slate-300">
+                                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-phone w-4 text-emerald-500"></i> ${cvData.phone}</p>
+                                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-envelope w-4 text-emerald-500"></i> ${cvData.email}</p>
+                                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot w-4 text-emerald-500"></i> ${cvData.location}</p>
+                                            ${cvData.showAge && cvData.age ? `<p class="flex items-center gap-1.5"><i class="fa-solid fa-cake-candles w-4 text-emerald-500"></i> ${cvData.age}</p>` : ''}
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Key Skills' : 'Habilidades'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-slate-800 text-slate-200 rounded px-1.5 py-0.5 text-[8px]")}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <div class="space-y-1 text-[9px]">
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">${currentLanguage === 'en' ? 'Languages' : 'Idiomas'}</h3>
+                                        <p class="text-slate-300">${cvData.languages}</p>
+                                    </div>
+                                    <p class="text-[8px] text-slate-500">Global CV Certified</p>
+                                </div>
+                            </div>
+
+                            <div class="w-2/3 p-6 space-y-4">
+                                <div>
+                                    <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">${currentLanguage === 'en' ? 'Objective' : 'Objetivo'}</h3>
+                                    <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Employment History' : 'Historial de Empleo'}</h3>
+                                    <div class="space-y-3">
+                                        ${(cvData.experience || []).map(exp => `
+                                            <div class="avoid-break">
+                                                <div class="flex justify-between items-baseline">
+                                                    <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                    <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
+                                                </div>
+                                                <p class="text-[9px] text-slate-455 italic mb-1">${exp.company}</p>
+                                                <ul class="list-disc pl-4 text-[10px] text-slate-650 space-y-0.5">
+                                                    ${formatDetails(exp.details)}
+                                                </ul>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <h3 class="text-[9px] font-bold uppercase tracking-widest text-slate-400 border-b border-slate-200 pb-0.5">${currentLanguage === 'en' ? 'Education' : 'Formación'}</h3>
+                                    <div class="space-y-2">
+                                        ${(cvData.education || []).map(edu => `
+                                            <div class="flex justify-between items-baseline avoid-break">
+                                                <div>
+                                                    <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                    <p class="text-[9px] text-slate-500">${edu.institution}</p>
+                                                </div>
+                                                <span class="text-[9px] text-slate-400 font-medium">${edu.dates}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 7: // Teal Creativo
+                    html = `
+                        <div class="font-outfit text-slate-800 text-xs animate-fadeIn">
+                            <div class="bg-teal-50 border border-teal-100 p-5 rounded-xl mb-4 flex justify-between items-center gap-4">
+                                <div class="space-y-1">
+                                    <span class="bg-teal-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">${currentLanguage === 'en' ? 'Certified Profile' : 'Perfil Certificado'}</span>
+                                    <h2 class="text-2xl font-bold text-teal-950">${cvData.name}</h2>
+                                    <p class="text-[10px] font-semibold text-teal-700 uppercase">${cvData.title}</p>
+                                    <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1">
+                                        <span><i class="fa-solid fa-phone text-teal-600 mr-1"></i> ${cvData.phone}</span>
+                                        <span><i class="fa-solid fa-envelope text-teal-600 mr-1"></i> ${cvData.email}</span>
+                                        <span><i class="fa-solid fa-location-dot text-teal-600 mr-1"></i> ${cvData.location}</span>
+                                        ${cvData.showAge && cvData.age ? `<span><i class="fa-solid fa-cake-candles text-teal-600 mr-1"></i> ${cvData.age}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${photoHtml}
+                            </div>
+
+                            <div class="mb-4">
+                                <h3 class="text-[10px] font-bold uppercase tracking-wider text-teal-700 mb-1">${currentLanguage === 'en' ? 'Professional Summary' : 'Resumen'}</h3>
+                                <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                            </div>
+
+                            <div class="grid grid-cols-12 gap-5">
+                                <div class="col-span-8 space-y-4">
+                                    <div>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-teal-700 mb-2 border-b-2 border-teal-50 pb-0.5">${currentLanguage === 'en' ? 'Work Experience' : 'Historial Laboral'}</h3>
+                                        <div class="space-y-3">
+                                            ${(cvData.experience || []).map(exp => `
+                                                <div class="relative pl-3 border-l-2 border-teal-100 avoid-break">
+                                                    <span class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                                                    <div class="flex justify-between items-baseline mb-0.5">
+                                                        <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                        <span class="text-[9px] font-bold text-teal-700">${exp.dates}</span>
+                                                    </div>
+                                                    <p class="text-[9px] text-slate-400 font-semibold mb-1">${exp.company}</p>
+                                                    <ul class="list-disc pl-4 text-[10px] text-slate-655 space-y-0.5">
+                                                        ${formatDetails(exp.details)}
+                                                    </ul>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-4 space-y-4">
+                                    <div>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-teal-700 mb-2 border-b-2 border-teal-50 pb-0.5">${currentLanguage === 'en' ? 'Skills' : 'Especialidades'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-teal-50 text-teal-950 rounded px-2 py-0.5 text-[8px] font-semibold border border-teal-100")}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 class="text-[10px] font-bold uppercase tracking-wider text-teal-700 mb-2 border-b-2 border-teal-50 pb-0.5">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
+                                        <div class="space-y-2">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                    <p class="text-[9px] text-slate-550">${edu.institution}</p>
+                                                    <span class="text-[9px] font-medium text-slate-455">${edu.dates}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 8: // Piedra y Acero
+                    html = `
+                        <div class="font-mono-custom text-slate-800 text-xs animate-fadeIn" style="line-height: 1.3;">
+                            <div class="border-4 border-slate-700 p-4 mb-4">
+                                <h2 class="text-xl font-bold text-slate-900 uppercase tracking-tight">${cvData.name}</h2>
+                                <p class="text-[9px] font-bold text-slate-500 mb-2 uppercase">// ${cvData.title}</p>
+                                <div class="grid grid-cols-2 gap-1 text-[9px] text-slate-500 border-t border-slate-200 pt-2">
+                                    <span>PHONE: ${cvData.phone}</span>
+                                    <span>EMAIL: ${cvData.email}</span>
+                                    <span>LOCATION: ${cvData.location}</span>
+                                    ${cvData.showAge && cvData.age ? `<span>AGE: ${cvData.age}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-[9px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 mb-1.5">:: ${currentLanguage === 'en' ? 'PROFILE SUMMARY' : 'PERFIL RESUMIDO'}</h3>
+                                    <p class="text-justify leading-normal">${cvData.summary}</p>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-[9px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 mb-2">:: ${currentLanguage === 'en' ? 'PROFESSIONAL HISTORY' : 'HISTORIAL PROFESIONAL'}</h3>
+                                    <div class="space-y-2.5">
+                                        ${(cvData.experience || []).map(exp => `
+                                            <div class="bg-slate-50 p-2 border-l-4 border-slate-500 avoid-break">
+                                                <div class="flex justify-between items-baseline font-bold text-slate-950">
+                                                    <span>${exp.role}</span>
+                                                    <span>${exp.dates}</span>
+                                                </div>
+                                                <p class="text-slate-500 text-[9px] font-medium mb-1">${exp.company}</p>
+                                                <ul class="list-disc pl-4 text-slate-700 text-[9px] space-y-0.5">
+                                                    ${formatDetails(exp.details)}
+                                                </ul>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <h3 class="text-[9px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 mb-1.5">:: ${currentLanguage === 'en' ? 'EDUCATION' : 'ESTUDIOS'}</h3>
+                                        <div class="space-y-1.5">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <span class="font-bold block text-[10px]">${edu.degree}</span>
+                                                    <span class="text-slate-500 text-[9px] block">${edu.institution} (${edu.dates})</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-[9px] font-bold uppercase text-white bg-slate-700 px-2 py-0.5 mb-1.5">:: ${currentLanguage === 'en' ? 'CAPABILITIES' : 'APTITUDES'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-slate-200 text-slate-800 rounded px-1.5 py-0.5 text-[8px]")}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 9: // Compacto Una Página
+                    html = `
+                        <div class="font-inter text-slate-800 text-[10px] animate-fadeIn" style="line-height: 1.25;">
+                            <div class="text-center pb-2 border-b border-slate-300 mb-3 flex justify-between items-center gap-4">
+                                <div class="text-left">
+                                    <h2 class="text-lg font-black text-slate-900">${cvData.name}</h2>
+                                    <p class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider">${cvData.title}</p>
+                                </div>
+                                <div class="text-right text-[8px] text-slate-500 space-y-0.5">
+                                    <p><i class="fa-solid fa-phone"></i> ${cvData.phone} | <i class="fa-solid fa-envelope"></i> ${cvData.email}</p>
+                                    <p><i class="fa-solid fa-location-dot"></i> ${cvData.location} ${cvData.showAge && cvData.age ? ` | ${cvData.age}` : ''}</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-2.5">
+                                <p class="text-slate-655 text-justify">${cvData.summary}</p>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <h3 class="font-bold text-[10px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 mb-1">${currentLanguage === 'en' ? 'Experience' : 'Experiencia'}</h3>
+                                    <div class="space-y-2">
+                                        ${(cvData.experience || []).map(exp => `
+                                            <div class="avoid-break">
+                                                <div class="flex justify-between items-baseline font-bold text-slate-900">
+                                                    <span>${exp.role}</span>
+                                                    <span class="font-semibold text-slate-500">${exp.dates}</span>
+                                                </div>
+                                                <p class="text-slate-400 font-semibold text-[8px] mb-1">${exp.company}</p>
+                                                <ul class="list-disc pl-4 space-y-0.5 text-slate-655">
+                                                    ${formatDetails(exp.details)}
+                                                </ul>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 pt-1.5 border-t border-slate-150">
+                                    <div>
+                                        <h3 class="font-bold text-[10px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 mb-1">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
+                                        <div class="space-y-1.5">
+                                            ${(cvData.education || []).map(edu => `
+                                                <div>
+                                                    <span class="font-bold block text-[9px]">${edu.degree}</span>
+                                                    <span class="text-slate-500 block">${edu.institution} (${edu.dates})</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-[10px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 mb-1">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${renderBadges(cvData.skills, "bg-slate-100 text-slate-800 rounded px-1.5 py-0.5 text-[8px] font-semibold")}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 10: // Terracota Cálido
+                    html = `
+                        <div class="font-lora text-slate-800 text-xs animate-fadeIn">
+                            <div class="flex items-center justify-between border-b-2 border-orange-200 pb-4 mb-4 gap-4 animate-fadeIn">
+                                <div class="space-y-1">
+                                    <h2 class="text-xl font-bold text-orange-950">${cvData.name}</h2>
+                                    <p class="text-[10px] font-semibold tracking-wider text-orange-700 uppercase">${cvData.title}</p>
+                                    <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-slate-500 pt-1.5">
+                                        <span>${cvData.phone}</span>
+                                        <span>${cvData.email}</span>
+                                        <span>${cvData.location}</span>
+                                        ${cvData.showAge && cvData.age ? `<span>${cvData.age}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${photoHtml}
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-[10px] font-bold uppercase tracking-wider text-orange-800 mb-1">${currentLanguage === 'en' ? 'Profile' : 'Perfil Profesional'}</h3>
+                                    <p class="text-slate-655 leading-relaxed text-justify">${cvData.summary}</p>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-5">
+                                    <div class="col-span-2 space-y-4">
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-orange-800 mb-2">${currentLanguage === 'en' ? 'Experience' : 'Trayectoria'}</h3>
+                                            <div class="space-y-3">
+                                                ${(cvData.experience || []).map(exp => `
+                                                    <div class="avoid-break">
+                                                        <div class="flex justify-between items-baseline mb-0.5">
+                                                            <h4 class="text-[11px] font-bold text-slate-900">${exp.role}</h4>
+                                                            <span class="text-[9px] font-semibold text-orange-700">${exp.dates}</span>
+                                                        </div>
+                                                        <p class="text-[9px] text-slate-400 font-semibold mb-1">${exp.company}</p>
+                                                        <ul class="list-disc pl-4 text-[10px] text-slate-650 space-y-0.5">
+                                                            ${formatDetails(exp.details)}
+                                                        </ul>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-1 space-y-4">
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-orange-800 mb-2">${currentLanguage === 'en' ? 'Skills' : 'Destrezas'}</h3>
+                                            <div class="flex flex-wrap gap-1">
+                                                ${renderBadges(cvData.skills, "bg-orange-50 text-orange-950 border border-orange-100 rounded px-2 py-0.5 text-[9px]")}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-[10px] font-bold uppercase tracking-wider text-orange-800 mb-2">${currentLanguage === 'en' ? 'Education' : 'Estudios'}</h3>
+                                            <div class="space-y-2">
+                                                ${(cvData.education || []).map(edu => `
+                                                    <div>
+                                                        <h4 class="text-[10px] font-bold text-slate-900">${edu.degree}</h4>
+                                                        <p class="text-[9px] text-slate-550">${edu.institution}</p>
+                                                        <span class="text-[9px] font-medium text-slate-455">${edu.dates}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Ejecutar Inicialización
+        window.onload = function() {
+            renderTemplateSelector();
+            loadDataIntoInputs();
+        };
+    </script>
+</body>
+</html>
