@@ -17,7 +17,6 @@
         :root {
             --cv-padding: 15mm;
             --cv-font-base: 11px;
-            --cv-gap-multiplier: 1.0;
             --cv-line-height: 1.35;
         }
 
@@ -25,7 +24,7 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0 !important;
+                margin: 0 !important; /* Elimina cabeceras, pies de página, URLs y fechas de la impresión */
             }
             body {
                 background: white !important;
@@ -34,10 +33,13 @@
                 padding: 0 !important;
             }
             .no-print {
-                display: none !important;
+                display: none !important; /* Oculta el editor, header y footer */
             }
-            /* Elimina absolutamente cualquier borde o sombra en el documento PDF final */
+            /* Elimina absolutamente cualquier borde negro, sombra o marco gris en el documento PDF final */
             #print-area {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
                 width: 210mm !important;
                 height: 297mm !important;
                 min-height: 297mm !important;
@@ -65,7 +67,7 @@
             }
         }
 
-        /* Estilos del Lienzo de Hoja A4 en Pantalla (Simulación Física) */
+        /* Estilos del Lienzo de Hoja A4 en Pantalla (Simulación Física en la derecha) */
         #print-area {
             width: 210mm;
             height: 297mm;
@@ -76,8 +78,8 @@
             background-color: white;
             color: #1e293b;
             position: relative;
-            overflow: hidden; /* Evita que el contenido desborde el límite de una página A4 */
-            transition: all 0.2s ease-in-out;
+            overflow: hidden; /* Evita desborde de contenido fuera del lienzo A4 */
+            transition: all 0.15s ease-in-out;
         }
         
         /* Definiciones Tipográficas */
@@ -103,7 +105,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-inter flex flex-col antialiased">
+<body class="bg-slate-955 text-slate-100 min-h-screen font-inter flex flex-col antialiased">
 
     <!-- Sistema de Notificaciones Flotantes (Toasts) -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2 no-print"></div>
@@ -128,7 +130,7 @@
     </div>
 
     <!-- Encabezado de la Aplicación (No Print) -->
-    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 no-print shadow-lg">
+    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 no-print shadow-lg animate-fadeIn">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-600 text-white p-2.5 rounded-xl shadow-lg shadow-emerald-900/30">
@@ -137,9 +139,9 @@
                 <div>
                     <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
                         Creador de CV Inteligente A4
-                        <span class="bg-slate-800 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-700">Ajuste de Hoja Exacto</span>
+                        <span class="bg-slate-800 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-slate-700">Página Única Completa</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Currículum para el extranjero diseñado para una sola página A4 sin desbordes.</p>
+                    <p class="text-xs text-slate-400">Sin marcas de agua ni bordes negros. Optimizado para impresoras y PDF.</p>
                 </div>
             </div>
             
@@ -188,24 +190,41 @@
             <!-- Formularios de Entrada -->
             <div class="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-6">
                 
-                <!-- Ajustes de Página A4 (Solución contra desborde) -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/20 space-y-3">
+                <!-- Ajustes de Página A4 Avanzados (AJUSTE FINO) -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/20 space-y-4">
                     <div class="flex items-center gap-2 text-emerald-400">
                         <i class="fa-solid fa-sliders text-sm"></i>
-                        <h4 class="text-xs font-bold uppercase tracking-wider">Ajustes de Página A4</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-wider">Ajuste Fino de Hoja A4</h4>
                     </div>
-                    <p class="text-[10px] text-slate-400 leading-normal">Si tu contenido se corta al final de la hoja A4, selecciona un nivel de espaciado más compacto:</p>
+                    <p class="text-[10px] text-slate-400 leading-normal">Mueve los controles deslizantes para que tu currículum llene exactamente la página completa sin cortarse:</p>
                     
-                    <div class="grid grid-cols-3 gap-2 pt-1">
-                        <button onclick="setPageCompactness('compact')" id="btn-comp-compact" class="compactness-btn py-2 text-[10px] font-bold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition">
-                            Compacto
-                        </button>
-                        <button onclick="setPageCompactness('normal')" id="btn-comp-normal" class="compactness-btn py-2 text-[10px] font-bold rounded-lg border border-emerald-500/40 bg-emerald-950/20 text-emerald-400 transition">
-                            Normal
-                        </button>
-                        <button onclick="setPageCompactness('loose')" id="btn-comp-loose" class="compactness-btn py-2 text-[10px] font-bold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition">
-                            Espacioso
-                        </button>
+                    <div class="space-y-3">
+                        <!-- Control de tamaño de letra -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-300">
+                                <span>Tamaño de Letra</span>
+                                <span id="label-font-size">11px</span>
+                            </div>
+                            <input type="range" id="slider-font-size" min="9" max="15" step="0.5" value="11" oninput="updateFineTuning()" class="w-full accent-emerald-500 bg-slate-900 rounded-lg appearance-none h-1.5 cursor-pointer">
+                        </div>
+
+                        <!-- Control de márgenes -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-300">
+                                <span>Márgenes de la Hoja</span>
+                                <span id="label-padding">15mm</span>
+                            </div>
+                            <input type="range" id="slider-padding" min="8" max="25" step="1" value="15" oninput="updateFineTuning()" class="w-full accent-emerald-500 bg-slate-900 rounded-lg appearance-none h-1.5 cursor-pointer">
+                        </div>
+
+                        <!-- Control de espaciado de línea -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-300">
+                                <span>Espaciado / Altura de Línea</span>
+                                <span id="label-line-height">1.35</span>
+                            </div>
+                            <input type="range" id="slider-line-height" min="1.1" max="1.7" step="0.05" value="1.35" oninput="updateFineTuning()" class="w-full accent-emerald-500 bg-slate-900 rounded-lg appearance-none h-1.5 cursor-pointer">
+                        </div>
                     </div>
                 </div>
 
@@ -388,7 +407,7 @@
                         <div class="pt-4 border-t border-slate-850">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Dominio de Idioma</span>
                             <div class="grid grid-cols-2 gap-2">
-                                <button onclick="setLanguage('Español (Nativo), Inglés (Básico)')" class="bg-slate-950 hover:bg-slate-850 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
+                                <button onclick="setLanguage('Español (Nativo), Inglés (Básico)')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left p-3 rounded-xl text-xs transition">
                                     <div class="font-extrabold text-white">Inglés Básico</div>
                                     <span class="text-[10px] text-slate-400">Español (Nativo), Inglés (Básico)</span>
                                 </button>
@@ -501,7 +520,7 @@
             { es: "Certificación de Primeros Auxilios", en: "First Aid & CPR Certification" }
         ];
 
-        // Datos en Español preestablecidos
+        // Datos en Español preestablecidos (Con formato Array compatible en habilidades)
         const defaultSpanishData = {
             name: "JUAN CARLOS FLORES",
             title: "ESPECIALISTA EN MANTENIMIENTO DE ÁREAS VERDES / GREENSKEEPER",
@@ -579,16 +598,20 @@
         };
 
         // Estado de la Aplicación y Lenguaje Activo
-        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v6')) || JSON.parse(JSON.stringify(defaultSpanishData));
-        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v6')) || 1;
-        let currentLanguage = localStorage.getItem('current_language_gh_v6') || 'es';
-        let compactnessMode = localStorage.getItem('compactness_mode_v6') || 'normal';
+        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v7')) || JSON.parse(JSON.stringify(defaultSpanishData));
+        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v7')) || 1;
+        let currentLanguage = localStorage.getItem('current_language_gh_v7') || 'es';
+
+        // Variables de ajuste fino inicializadas desde LocalStorage
+        let fineFontSize = localStorage.getItem('cv_fine_font_size') || '11';
+        let finePadding = localStorage.getItem('cv_fine_padding') || '15';
+        let fineLineHeight = localStorage.getItem('cv_fine_line_height') || '1.35';
 
         // Lista de 10 Plantillas Profesionales
         const templates = [
             { id: 1, name: "Senda Verde (Esmeralda)", desc: "Estilo ecológico ideal para áreas verdes y paisajismo." },
             { id: 2, name: "Navy Corporativo", desc: "Clásico, elegante, con alta legibilidad corporativa." },
-            { id: 3, name: "ATS US Standard", desc: "Sin foto, minimalista. Especial para sistemas automatizados de EE. UU." },
+            { id: 3, name: "ATS US Standard", desc: "Sin foto, minimalista. Especial para sistemas de selección de EE. UU." },
             { id: 4, name: "Minimalista Moderno", desc: "Diseño despejado con tipografía Serif premium." },
             { id: 5, name: "Élite Oro Negro", desc: "Tonos grafito y detalles ámbar profesionales." },
             { id: 6, name: "Columna Dividida", desc: "Barra lateral oscura con información técnica compacta." },
@@ -609,7 +632,6 @@
             return skill;
         }
 
-        // Traducir las certificaciones activas
         function translateCert(cert, targetLang) {
             const found = SUGGESTED_CERTS.find(item => item.es === cert || item.en === cert);
             if (found) {
@@ -618,43 +640,29 @@
             return cert;
         }
 
-        // Gestión del tamaño de Hoja y Compactación
-        function setPageCompactness(mode) {
-            compactnessMode = mode;
-            localStorage.setItem('compactness_mode_v6', mode);
-            
-            // Actualizar botones de la UI
-            document.querySelectorAll('.compactness-btn').forEach(btn => {
-                btn.classList.remove('border-emerald-500/40', 'bg-emerald-950/20', 'text-emerald-400');
-                btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-400');
-            });
-            const activeBtn = document.getElementById(`btn-comp-${mode}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border-slate-800', 'bg-slate-900', 'text-slate-400');
-                activeBtn.classList.add('border-emerald-500/40', 'bg-emerald-950/20', 'text-emerald-400');
-            }
+        // Gestión del tamaño de Hoja y Compactación mediante Sliders
+        function updateFineTuning() {
+            const fontSize = document.getElementById('slider-font-size').value;
+            const padding = document.getElementById('slider-padding').value;
+            const lineHeight = document.getElementById('slider-line-height').value;
 
-            // Aplicar CSS customizado dinámicamente al lienzo A4
+            // Mostrar el valor numérico en el label
+            document.getElementById('label-font-size').innerText = fontSize + 'px';
+            document.getElementById('label-padding').innerText = padding + 'mm';
+            document.getElementById('label-line-height').innerText = lineHeight;
+
+            // Actualizar variables de CSS globales
             const root = document.documentElement;
-            if (mode === 'compact') {
-                root.style.setProperty('--cv-padding', '10mm');
-                root.style.setProperty('--cv-font-base', '10px');
-                root.style.setProperty('--cv-gap-multiplier', '0.75');
-                root.style.setProperty('--cv-line-height', '1.2');
-            } else if (mode === 'normal') {
-                root.style.setProperty('--cv-padding', '16mm');
-                root.style.setProperty('--cv-font-base', '11.5px');
-                root.style.setProperty('--cv-gap-multiplier', '1.0');
-                root.style.setProperty('--cv-line-height', '1.38');
-            } else if (mode === 'loose') {
-                root.style.setProperty('--cv-padding', '22mm');
-                root.style.setProperty('--cv-font-base', '12px');
-                root.style.setProperty('--cv-gap-multiplier', '1.25');
-                root.style.setProperty('--cv-line-height', '1.5');
-            }
+            root.style.setProperty('--cv-font-base', fontSize + 'px');
+            root.style.setProperty('--cv-padding', padding + 'mm');
+            root.style.setProperty('--cv-line-height', lineHeight);
+
+            // Guardar valores en LocalStorage
+            localStorage.setItem('cv_fine_font_size', fontSize);
+            localStorage.setItem('cv_fine_padding', padding);
+            localStorage.setItem('cv_fine_line_height', lineHeight);
 
             renderSelectedTemplate();
-            showToast(`Ajuste de hoja cambiado a: ${mode.toUpperCase()}`);
         }
 
         // Función para enviar Toast flotante
@@ -673,7 +681,7 @@
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            }, 3000);
         }
 
         // Modal de confirmación personalizado
@@ -723,8 +731,13 @@
                 placeholder.classList.remove('hidden');
             }
 
-            // Forzar carga de variables CSS segun modo de compactacion guardado
-            setPageCompactness(compactnessMode);
+            // Inicializar sliders con los valores guardados
+            document.getElementById('slider-font-size').value = fineFontSize;
+            document.getElementById('slider-padding').value = finePadding;
+            document.getElementById('slider-line-height').value = fineLineHeight;
+
+            // Forzar actualización de variables CSS segun los sliders cargados
+            updateFineTuning();
 
             renderExperienceEditor();
             renderEducationEditor();
@@ -1088,9 +1101,9 @@
 
         // PERSISTENCIA DE ESTADO Y GUARDADO LOCAL
         function saveState() {
-            localStorage.setItem('saved_cv_data_gh_v6', JSON.stringify(cvData));
-            localStorage.setItem('active_template_id_gh_v6', activeTemplateId);
-            localStorage.setItem('current_language_gh_v6', currentLanguage);
+            localStorage.setItem('saved_cv_data_gh_v7', JSON.stringify(cvData));
+            localStorage.setItem('active_template_id_gh_v7', activeTemplateId);
+            localStorage.setItem('current_language_gh_v7', currentLanguage);
         }
 
         function updateCV() {
@@ -1191,11 +1204,17 @@
                 "¿Restablecer datos?",
                 "Esta acción borrará tus ediciones y volverá a cargar los datos de demostración del Salvador para Greenskeeper.",
                 () => {
-                    localStorage.removeItem('saved_cv_data_gh_v6');
+                    localStorage.removeItem('saved_cv_data_gh_v7');
                     cvData = JSON.parse(JSON.stringify(defaultSpanishData));
                     currentLanguage = 'es';
                     activeTemplateId = 1;
-                    compactnessMode = 'normal';
+                    
+                    // Resetear sliders de compactación a los valores recomendados por defecto
+                    document.getElementById('slider-font-size').value = 11;
+                    document.getElementById('slider-padding').value = 15;
+                    document.getElementById('slider-line-height').value = 1.35;
+                    
+                    updateFineTuning();
                     updateTemplateSelectorUI();
                     loadDataIntoInputs();
                     showToast("Datos restaurados de demostración");
@@ -1482,7 +1501,7 @@
                     `;
                     break;
 
-                case 3: // ATS US Standard
+                case 3: // ATS US Standard (Highly clean, text scan optimized, strictly single-page)
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-black max-w-[680px] mx-auto h-full flex flex-col justify-between">
@@ -1514,7 +1533,7 @@
                                                         <span class="text-[9.5px]">${exp.role}</span>
                                                         <span class="text-[8.5px]">${exp.dates}</span>
                                                     </div>
-                                                    <div class="flex justify-between items-baseline font-semibold text-slate-655 italic mb-0.5">
+                                                    <div class="flex justify-between items-baseline font-semibold text-slate-650 italic mb-0.5">
                                                         <span>${exp.company}</span>
                                                     </div>
                                                     <ul class="list-disc pl-3 text-slate-800 space-y-0.5">
@@ -1634,7 +1653,7 @@
                         <div class="font-outfit text-slate-850 h-full flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start border-b-2 border-amber-500 pb-2 cv-mb-md gap-4">
-                                    <div class="space-y-1">
+                                    <div class="space-y-1.5">
                                         <h2 class="text-xl font-black text-slate-900 tracking-tight leading-none">${cvData.name}</h2>
                                         <p class="text-[9px] font-bold tracking-widest text-amber-600 uppercase leading-none mt-1">${cvData.title}</p>
                                         <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px] text-slate-500 pt-1.5">
@@ -1761,7 +1780,7 @@
                                                     <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
                                                 </div>
                                                 <p class="text-[8.5px] text-slate-450 italic mb-1">${exp.company}</p>
-                                                <ul class="list-disc pl-3 text-[10px] text-slate-650 space-y-0.5">
+                                                <ul class="list-disc pl-3 text-[10px] text-slate-655 space-y-0.5">
                                                     ${formatDetails(exp.details)}
                                                 </ul>
                                             </div>
@@ -1776,7 +1795,7 @@
                                             <div class="flex justify-between items-baseline avoid-break">
                                                 <div>
                                                     <h4 class="font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                    <p class="text-[8px] text-slate-500 mt-0.5">${edu.institution}</p>
+                                                    <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
                                                 </div>
                                                 <span class="text-[8px] text-slate-400 font-medium">${edu.dates}</span>
                                             </div>
@@ -1820,7 +1839,7 @@
                                             <div class="space-y-2">
                                                 ${(cvData.experience || []).map(exp => `
                                                     <div class="relative pl-3 border-l-2 border-teal-100 avoid-break">
-                                                        <span class="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-teal-400"></span>
+                                                        <span class="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-teal-400"></span>
                                                         <div class="flex justify-between items-baseline mb-0.5">
                                                             <h4 class="font-bold text-slate-900">${exp.role}</h4>
                                                             <span class="text-[8px] font-bold text-teal-700">${exp.dates}</span>
@@ -1839,7 +1858,7 @@
                                         <div>
                                             <h3 class="text-[9px] font-bold uppercase tracking-wider text-teal-700 border-b-2 border-teal-50 cv-h-rule">${currentLanguage === 'en' ? 'Skills' : 'Especialidades'}</h3>
                                             <div class="flex flex-wrap gap-1">
-                                                ${renderBadges(cvData.skills, "bg-teal-50 text-teal-950 rounded-full px-2 py-0.5 text-[8.5px] font-semibold border border-teal-100")}
+                                                ${renderBadges(cvData.skills, "bg-teal-50 text-teal-955 rounded-full px-2 py-0.5 text-[8.5px] font-semibold border border-teal-100")}
                                             </div>
                                         </div>
 
@@ -1889,7 +1908,7 @@
                                         <div class="space-y-2">
                                             ${(cvData.experience || []).map(exp => `
                                                 <div class="bg-slate-50 p-1.5 border-l-4 border-slate-500 avoid-break">
-                                                    <div class="flex justify-between items-baseline font-bold text-slate-950">
+                                                    <div class="flex justify-between items-baseline font-bold text-slate-955">
                                                         <span class="text-[9px]">${exp.role}</span>
                                                         <span class="text-[8px]">${exp.dates}</span>
                                                     </div>
@@ -1944,12 +1963,12 @@
                                 </div>
 
                                 <div class="cv-mb-sm">
-                                    <p class="text-slate-650 text-justify">${cvData.summary}</p>
+                                    <p class="text-slate-655 text-justify">${cvData.summary}</p>
                                 </div>
 
                                 <div class="space-y-2.5">
                                     <div>
-                                        <h3 class="font-bold text-[9px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Experiencia'}</h3>
+                                        <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Experiencia'}</h3>
                                         <div class="space-y-1.5">
                                             ${(cvData.experience || []).map(exp => `
                                                 <div class="avoid-break">
@@ -1968,7 +1987,7 @@
 
                                     <div class="grid grid-cols-2 gap-4 pt-1.5 border-t border-slate-150">
                                         <div>
-                                            <h3 class="font-bold text-[9px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
+                                            <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Education' : 'Educación'}</h3>
                                             <div class="space-y-1.5">
                                                 ${(cvData.education || []).map(edu => `
                                                     <div>
@@ -1979,7 +1998,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 class="font-bold text-[9px] text-slate-950 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
+                                            <h3 class="font-bold text-[9px] text-slate-955 uppercase border-b border-slate-200 pb-0.5 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Habilidades'}</h3>
                                             <div class="flex flex-wrap gap-1">
                                                 ${renderBadges(cvData.skills, "bg-slate-100 text-slate-800 rounded px-1.5 py-0.5 text-[8px] font-semibold")}
                                             </div>
