@@ -24,8 +24,8 @@
         /* Estilos de impresión y exportación estricta a A4 */
         @media print {
             @page {
-                size: A4;
-                margin: 0;
+                size: A4 portrait;
+                margin: 0 !important;
             }
             body {
                 background: white !important;
@@ -36,19 +36,28 @@
             .no-print {
                 display: none !important;
             }
+            /* Elimina absolutamente cualquier borde o sombra en el documento PDF final */
             #print-area {
                 width: 210mm !important;
                 height: 297mm !important;
                 min-height: 297mm !important;
                 max-height: 297mm !important;
                 padding: var(--cv-padding) !important;
+                margin: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
-                margin: 0 !important;
+                border-width: 0px !important;
+                outline: none !important;
+                border-style: none !important;
+                border-radius: 0px !important;
                 box-sizing: border-box !important;
-                page-break-after: avoid;
-                page-break-before: avoid;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
                 overflow: hidden !important;
+            }
+            #print-area * {
+                box-shadow: none !important;
+                text-shadow: none !important;
             }
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -67,8 +76,8 @@
             background-color: white;
             color: #1e293b;
             position: relative;
-            overflow: hidden; /* Garantiza que no se desborde nunca del límite físico A4 */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden; /* Evita que el contenido desborde el límite de una página A4 */
+            transition: all 0.2s ease-in-out;
         }
         
         /* Definiciones Tipográficas */
@@ -248,7 +257,7 @@
                         
                         <div class="flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full bg-slate-900 border-2 border-slate-700 overflow-hidden flex items-center justify-center relative shadow-md flex-shrink-0">
-                                <img id="preview-photo" src="" class="w-full h-full object-cover hidden">
+                                <img id="preview-photo" src="" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden'); document.getElementById('photo-placeholder').classList.remove('hidden');">
                                 <i id="photo-placeholder" class="fa-solid fa-user-check text-slate-500 text-2xl"></i>
                             </div>
                             <div class="flex-1">
@@ -440,8 +449,8 @@
 
             <!-- Contenedor con scroll para simular visualización perfecta en cualquier monitor -->
             <div class="w-full flex-1 p-4 md:p-8 flex justify-center items-start bg-slate-950 overflow-auto custom-scrollbar">
-                <!-- Lienzo de impresión física A4 -->
-                <div id="print-area" class="transition-all duration-300 rounded shadow-2xl border border-slate-200">
+                <!-- Lienzo de impresión física A4. No se aplican bordes visibles o líneas negras en impresión -->
+                <div id="print-area" class="transition-all duration-350 rounded shadow-2xl border-0 print:border-0">
                     <div id="resume-preview"></div>
                 </div>
             </div>
@@ -600,6 +609,7 @@
             return skill;
         }
 
+        // Traducir las certificaciones activas
         function translateCert(cert, targetLang) {
             const found = SUGGESTED_CERTS.find(item => item.es === cert || item.en === cert);
             if (found) {
@@ -1340,7 +1350,7 @@
                                                     <div class="avoid-break">
                                                         <div class="flex justify-between items-baseline mb-0.5">
                                                             <h4 class="font-extrabold text-slate-900">${exp.role}</h4>
-                                                            <span class="text-[8px] font-bold text-emerald-600">${exp.dates}</span>
+                                                            <span class="text-[9px] font-bold text-emerald-600">${exp.dates}</span>
                                                         </div>
                                                         <p class="text-[9px] font-semibold text-slate-400 mb-0.5">${exp.company}</p>
                                                         <ul class="list-disc pl-3 text-[9.5px] text-slate-600 space-y-0.5">
@@ -1377,7 +1387,7 @@
                                             <div>
                                                 <h3 class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider border-b border-emerald-100 cv-h-rule">${currentLanguage === 'en' ? 'Certifications' : 'Certificaciones'}</h3>
                                                 <div class="flex flex-wrap gap-1">
-                                                    ${renderBadges(cvData.certs, "bg-slate-100 text-slate-700 rounded px-1.5 py-0.5 text-[8px]")}
+                                                    ${renderBadges(cvData.certs, "bg-slate-100 text-slate-700 rounded px-1.5 py-0.5 text-[9px]")}
                                                 </div>
                                             </div>
                                         ` : ''}
@@ -1472,7 +1482,7 @@
                     `;
                     break;
 
-                case 3: // ATS US Standard (Highly clean, text scan optimized, strictly single-page)
+                case 3: // ATS US Standard
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-black max-w-[680px] mx-auto h-full flex flex-col justify-between">
@@ -1504,7 +1514,7 @@
                                                         <span class="text-[9.5px]">${exp.role}</span>
                                                         <span class="text-[8.5px]">${exp.dates}</span>
                                                     </div>
-                                                    <div class="flex justify-between items-baseline font-semibold text-slate-650 italic mb-0.5">
+                                                    <div class="flex justify-between items-baseline font-semibold text-slate-655 italic mb-0.5">
                                                         <span>${exp.company}</span>
                                                     </div>
                                                     <ul class="list-disc pl-3 text-slate-800 space-y-0.5">
@@ -1552,7 +1562,7 @@
                                 <div class="text-center space-y-1 cv-mb-lg">
                                     <h2 class="text-2xl font-light tracking-wide text-slate-900">${cvData.name}</h2>
                                     <p class="text-[9px] font-semibold tracking-widest text-slate-400 uppercase">${cvData.title}</p>
-                                    <div class="flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1 border-t border-slate-100 max-w-md mx-auto">
+                                    <div class="flex justify-center flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-slate-500 pt-1.5 border-t border-slate-100 max-w-md mx-auto">
                                         <span>${cvData.phone}</span>
                                         <span>•</span>
                                         <span>${cvData.email}</span>
@@ -1640,7 +1650,7 @@
                                 <div class="space-y-3">
                                     <div>
                                         <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-amber-600 cv-mb-sm">${currentLanguage === 'en' ? 'Professional Profile' : 'Resumen de Carrera'}</h3>
-                                        <p class="text-slate-650 leading-relaxed text-justify">${cvData.summary}</p>
+                                        <p class="text-slate-655 leading-relaxed text-justify">${cvData.summary}</p>
                                     </div>
 
                                     <div class="grid grid-cols-12 gap-4">
@@ -1654,8 +1664,8 @@
                                                                 <h4 class="font-bold text-slate-900">${exp.role}</h4>
                                                                 <span class="text-[8.5px] font-bold text-amber-600">${exp.dates}</span>
                                                             </div>
-                                                            <p class="text-[8.5px] font-medium text-slate-450 mb-1">${exp.company}</p>
-                                                            <ul class="list-disc pl-3 text-[9.5px] text-slate-650 space-y-0.5">
+                                                            <p class="text-[8.5px] font-medium text-slate-455 mb-1">${exp.company}</p>
+                                                            <ul class="list-disc pl-3 text-slate-655 space-y-0.5">
                                                                 ${formatDetails(exp.details)}
                                                             </ul>
                                                         </div>
@@ -1678,7 +1688,7 @@
                                                     ${(cvData.education || []).map(edu => `
                                                         <div>
                                                             <h4 class="text-[9px] font-bold text-slate-900 leading-none">${edu.degree}</h4>
-                                                            <p class="text-[8px] text-slate-500 mt-0.5">${edu.institution}</p>
+                                                            <p class="text-[8px] text-slate-550 mt-0.5">${edu.institution}</p>
                                                             <span class="text-[8px] font-medium text-slate-450">${edu.dates}</span>
                                                         </div>
                                                     `).join('')}
@@ -1697,7 +1707,7 @@
                     `;
                     break;
 
-                case 6: // Columna Dividida (Solid left dark column, beautifully adapted for A4 page breaks)
+                case 6: // Columna Dividida
                     html = `
                         ${dynamicStyles}
                         <div class="font-inter text-slate-800 flex h-full -mx-[16mm] -my-[16mm] text-xs">
@@ -1748,10 +1758,10 @@
                                             <div class="avoid-break">
                                                 <div class="flex justify-between items-baseline mb-0.5">
                                                     <h4 class="font-bold text-slate-900">${exp.role}</h4>
-                                                    <span class="text-[8px] font-semibold text-emerald-600">${exp.dates}</span>
+                                                    <span class="text-[9px] font-semibold text-emerald-600">${exp.dates}</span>
                                                 </div>
-                                                <p class="text-[8.5px] text-slate-400 italic mb-1">${exp.company}</p>
-                                                <ul class="list-disc pl-3 text-[9.5px] text-slate-650 space-y-0.5">
+                                                <p class="text-[8.5px] text-slate-450 italic mb-1">${exp.company}</p>
+                                                <ul class="list-disc pl-3 text-[10px] text-slate-650 space-y-0.5">
                                                     ${formatDetails(exp.details)}
                                                 </ul>
                                             </div>
@@ -1852,7 +1862,7 @@
                     `;
                     break;
 
-                case 8: // Piedra y Acero (Slab layout, Space Mono font)
+                case 8: // Piedra y Acero
                     html = `
                         ${dynamicStyles}
                         <div class="font-mono-custom text-slate-800 h-full flex flex-col justify-between">
@@ -1990,7 +2000,7 @@
                                     <div class="space-y-0.5">
                                         <h2 class="text-xl font-bold text-orange-950 leading-none">${cvData.name}</h2>
                                         <p class="text-[9.5px] font-semibold tracking-wider text-orange-700 uppercase mt-1 leading-none">${cvData.title}</p>
-                                        <div class="flex flex-wrap gap-x-2.5 gap-y-0.5 text-[9px] text-slate-500 mt-1">
+                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-slate-500 pt-1.5">
                                             <span>${cvData.phone}</span>
                                             <span>${cvData.email}</span>
                                             <span>${cvData.location}</span>
@@ -2007,7 +2017,7 @@
                                     </div>
 
                                     <div class="grid grid-cols-3 gap-4">
-                                        <div class="col-span-2 space-y-3">
+                                        <div class="col-span-2 space-y-4">
                                             <div>
                                                 <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Experience' : 'Trayectoria'}</h3>
                                                 <div class="space-y-2.5">
@@ -2027,7 +2037,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-span-1 space-y-3">
+                                        <div class="col-span-1 space-y-4">
                                             <div>
                                                 <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-orange-800 cv-mb-sm">${currentLanguage === 'en' ? 'Skills' : 'Destrezas'}</h3>
                                                 <div class="flex flex-wrap gap-1">
