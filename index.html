@@ -154,7 +154,8 @@
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Español Original</span>
                 </button>
-                <button onclick="triggerPrint()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
+                <!-- BOTÓN REPARADO (Uso directo y nativo) -->
+                <button onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition duration-200 shadow-lg shadow-emerald-500/10">
                     <i class="fa-solid fa-print text-sm"></i>
                     <span>Guardar PDF / Imprimir</span>
                 </button>
@@ -483,14 +484,6 @@
 
     <!-- Lógica de Negocio y Estados -->
     <script>
-        // Función de impresión con recordatorio para el usuario
-        // Ejecución síncrona obligatoria para no ser bloqueada por navegadores modernos.
-        function triggerPrint() {
-            showToast("Recuerda desmarcar 'Encabezados y pies de página' al imprimir.", "info");
-            window.focus(); // Aseguramos que la ventana activa tenga el foco para habilitar la impresión
-            window.print();
-        }
-
         // Catálogo de Habilidades Sugeridas y equivalentes en Inglés
         const SUGGESTED_SKILLS = {
             greens: [
@@ -606,14 +599,14 @@
         };
 
         // Estado de la Aplicación y Lenguaje Activo
-        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v9')) || JSON.parse(JSON.stringify(defaultSpanishData));
-        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v9')) || 1;
-        let currentLanguage = localStorage.getItem('current_language_gh_v9') || 'es';
+        let cvData = JSON.parse(localStorage.getItem('saved_cv_data_gh_v10')) || JSON.parse(JSON.stringify(defaultSpanishData));
+        let activeTemplateId = parseInt(localStorage.getItem('active_template_id_gh_v10')) || 1;
+        let currentLanguage = localStorage.getItem('current_language_gh_v10') || 'es';
 
         // Variables de ajuste fino inicializadas desde LocalStorage
-        let fineFontSize = localStorage.getItem('cv_fine_font_size') || '11';
-        let finePadding = localStorage.getItem('cv_fine_padding') || '15';
-        let fineLineHeight = localStorage.getItem('cv_fine_line_height') || '1.35';
+        let fineFontSize = localStorage.getItem('cv_fine_font_size_v1') || '11';
+        let finePadding = localStorage.getItem('cv_fine_padding_v1') || '15';
+        let fineLineHeight = localStorage.getItem('cv_fine_line_height_v1') || '1.35';
 
         // Lista de 10 Plantillas Profesionales
         const templates = [
@@ -666,9 +659,9 @@
             root.style.setProperty('--cv-line-height', lineHeight);
 
             // Guardar valores en LocalStorage
-            localStorage.setItem('cv_fine_font_size', fontSize);
-            localStorage.setItem('cv_fine_padding', padding);
-            localStorage.setItem('cv_fine_line_height', lineHeight);
+            localStorage.setItem('cv_fine_font_size_v1', fontSize);
+            localStorage.setItem('cv_fine_padding_v1', padding);
+            localStorage.setItem('cv_fine_line_height_v1', lineHeight);
 
             renderSelectedTemplate();
         }
@@ -816,7 +809,7 @@
                 renderActiveSkills();
                 renderSuggestions();
                 renderSelectedTemplate();
-                showToast(`Habilidad "${skillToAdd}" añadida`);
+                showToast(`Habilidad añadida`);
             }
         }
 
@@ -1036,9 +1029,9 @@
 
         // PERSISTENCIA DE ESTADO Y GUARDADO LOCAL
         function saveState() {
-            localStorage.setItem('saved_cv_data_gh_v9', JSON.stringify(cvData));
-            localStorage.setItem('active_template_id_gh_v9', activeTemplateId);
-            localStorage.setItem('current_language_gh_v9', currentLanguage);
+            localStorage.setItem('saved_cv_data_gh_v10', JSON.stringify(cvData));
+            localStorage.setItem('active_template_id_gh_v10', activeTemplateId);
+            localStorage.setItem('current_language_gh_v10', currentLanguage);
         }
 
         function updateCV() {
@@ -1139,7 +1132,7 @@
                 "¿Restablecer datos?",
                 "Esta acción borrará tus ediciones y volverá a cargar los datos de demostración del Salvador para Greenskeeper.",
                 () => {
-                    localStorage.removeItem('saved_cv_data_gh_v9');
+                    localStorage.removeItem('saved_cv_data_gh_v10');
                     cvData = JSON.parse(JSON.stringify(defaultSpanishData));
                     currentLanguage = 'es';
                     activeTemplateId = 1;
